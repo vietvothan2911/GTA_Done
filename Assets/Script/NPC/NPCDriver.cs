@@ -46,6 +46,7 @@ public class NPCDriver : MonoBehaviour
             Vehiclel.transform.LookAt(npcControl.pointtarget);
             driverVehicles._vehicles.SetActive(true);
         }
+        Debug.LogError("Check");
         transform.parent = driverVehicles._driverSit;
         driverVehicles._driver = gameObject;
         if (npcControl.chacractorData.vehicle == SelectVehicles.Car)

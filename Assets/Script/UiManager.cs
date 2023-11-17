@@ -28,6 +28,9 @@ public class UiManager : MonoBehaviour
     [SerializeField]
     private int checkNoads;
 
+    [SerializeField]
+    private IAPManager iAP;
+
     //[SerializeField]
     //private 
 
@@ -122,7 +125,7 @@ public class UiManager : MonoBehaviour
         }
         checkNoads += 1;
 
-        if(checkNoads <= 3)
+        if(checkNoads <= 2)
         {
             return;
         }
@@ -142,6 +145,15 @@ public class UiManager : MonoBehaviour
         Time.timeScale = 1;
 
         iapNoAds.SetActive(false);
+    }
+
+    public void BuyNoAds()
+    {
+      
+        PlayerPrefs.SetInt("NoAds", 1);
+        iAP.Init();
+
+        EndNoAds();
     }
 }
 

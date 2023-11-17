@@ -141,29 +141,30 @@ public class PoliceStarManager : MonoBehaviour
 
         if (indexWanter == 1)
         {
-           
+            SpawnNPCInit.ins.maxPolice = 3;
 
         }
         else if (indexWanter == 2)
         {
-           
+            SpawnNPCInit.ins.maxPolice = 4;
         }
         else if (indexWanter == 3)
         {
-            
+            SpawnNPCInit.ins.maxPolice = 5;
         }
         else if (indexWanter == 4)
         {
-            
-          
+            SpawnNPCInit.ins.maxPolice = 6;
+
         }
         else if (indexWanter == 5)
         {
-          
+            SpawnNPCInit.ins.maxPolice = 7;
+
         }
         else
         {
-
+            SpawnNPCInit.ins.maxPolice = 3;
         }
     }
 

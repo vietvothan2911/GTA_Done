@@ -37,6 +37,8 @@ public class LuckyWheel : MonoBehaviour
     [SerializeField]
     private GameObject timeUi;
 
+    [SerializeField]
+    private GameObject exit;
     public void Awake()
     {
         uiLucky.SetActive(false);
@@ -71,7 +73,7 @@ public class LuckyWheel : MonoBehaviour
             {
                 speed += Time.unscaledDeltaTime * rotationIndex;
                 spin.transform.rotation = Quaternion.EulerAngles(0, 0, speed);
-
+                exit.SetActive(false);
                 rotationIndex -= Time.unscaledDeltaTime * 2;
 
             }
@@ -80,6 +82,7 @@ public class LuckyWheel : MonoBehaviour
 
                 Claim();
                 spinLock.SetActive(false);
+                exit.SetActive(true);
                 isSpin = false;
             }
         }
@@ -120,7 +123,7 @@ public class LuckyWheel : MonoBehaviour
     {
         rotationIndex = UnityEngine.Random.Range(10f,20f);
 
-        timeSpin = DateTime.Now.AddMinutes(1);
+        timeSpin = DateTime.Now.AddMinutes(10);
 
         timeUi.SetActive(true);
 

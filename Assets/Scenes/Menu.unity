@@ -6190,18 +6190,18 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 68b266f3e9613cb489ba16cd8fad9784, type: 3}
-    m_FontSize: 55
+    m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 1
-    m_MinSize: 5
-    m_MaxSize: 55
+    m_MinSize: 0
+    m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 100000
+  m_Text: 10000000
 --- !u!114 &1074795257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7375,7 +7375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc16f6e4b604fb54bb4e3f73df0463d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataSkinName: Shopskill
+  dataSkinName: ShopSkin
   shopItems:
   - {fileID: 11400000, guid: 15ef9fd0247c7214c9c3867658c90028, type: 2}
   - {fileID: 11400000, guid: f0c05a8a9c14d5d4abc74d67a2057af9, type: 2}
@@ -8332,8 +8332,9 @@ MonoBehaviour:
   uiLucky: {fileID: 6950209849985492123}
   istime: 0
   isSpintime: 0
-  textTime: {fileID: 548205052008828442}
+  textTime: {fileID: 548205052956879508}
   timeUi: {fileID: 548205051856281730}
+  exit: {fileID: 6950209848712812197}
 --- !u!4 &2998049850898481050
 Transform:
   m_ObjectHideFlags: 0
@@ -17696,7 +17697,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: X1500
+  m_text: X500
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 419276c9eb6547f4c832d1555cf82ef5, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: d8b79720927a21a4a8d82ba44a9ba80f, type: 2}
@@ -18277,7 +18278,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: X500
+  m_text: X250
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 419276c9eb6547f4c832d1555cf82ef5, type: 2}
   m_sharedMaterial: {fileID: -6975773418062461270, guid: 419276c9eb6547f4c832d1555cf82ef5, type: 2}

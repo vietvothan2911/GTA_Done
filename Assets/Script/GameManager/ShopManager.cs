@@ -46,6 +46,7 @@ public class ShopManager : MonoBehaviour
     [SerializeField]
     private int index;
 
+
     public void Awake()
     {
         ins = this;
@@ -55,35 +56,40 @@ public class ShopManager : MonoBehaviour
         {
             string data = PlayerPrefs.GetString(dataSkinName);
             skinData = JsonConvert.DeserializeObject<ShopSkinData>(data);
-            Equip();
+            //Equip();
 
         }
         else
         {
             skinData.MaterialPlayer = 0;
             //skinData.Skin.Add(true);
-
         }
 
         InitData();
+        index = PlayerPrefs.GetInt("skill");
+        skinData.MaterialPlayer = index +1;
+        if (skinData.MaterialPlayer != 0)
+        {
+            Material[] mats = player.materials;
+
+            mats[0] = shopItems[skinData.MaterialPlayer - 1].skin;
+            player.materials = mats;
+
+            Material[] gunmats = gunPlayer.materials;
+
+            gunmats[0] = shopItems[skinData.MaterialPlayer - 1].skinGun;
+            gunPlayer.materials = gunmats;
+        }
+
         ChooseSkin(index);
-
-        Material[] mats = player.materials;
-
-        mats[0] = shopItems[skinData.MaterialPlayer - 1].skin;
-        player.materials = mats;
-
-        Material[] gunmats = gunPlayer.materials;
-
-        gunmats[0] = shopItems[skinData.MaterialPlayer - 1].skinGun;
-        gunPlayer.materials = gunmats;
-
+       
     }
 
     public void OnShop()
     {
         shop.SetActive(true);
         InitData();
+        ChooseSkin(index);
     }
     public void BackShop()
     {
@@ -156,6 +162,7 @@ public class ShopManager : MonoBehaviour
         shopItemNow = shopItems[_index];
         skinData.MaterialPlayer = _index + 1;
         name.text = names[_index];
+       
         if (shopItemNow.isEquip == false)
         {
             if (shopItemNow.itemShop == BuyItemShop.money)
@@ -187,7 +194,7 @@ public class ShopManager : MonoBehaviour
         }
         else
         {
-            if (shopItemNow.skin == player.materials[0])
+            if (skinData.MaterialPlayer - 1 == PlayerPrefs.GetInt("skill"))
             {
                 buybutton.SetActive(false);
                 equip.SetActive(false);
@@ -228,6 +235,8 @@ public class ShopManager : MonoBehaviour
             gunmats[0] = shopItems[skinData.MaterialPlayer - 1].skinGun;
             gunPlayer.materials = gunmats;
         }
+        PlayerPrefs.SetInt("skill", index);
+
         equip.SetActive(false);
         unequip.SetActive(true);
     }
@@ -246,6 +255,7 @@ public class ShopManager : MonoBehaviour
             mats[0] = defaultGun;
             gunPlayer.materials = mats;
         }
+        PlayerPrefs.SetInt("skill", 0);
         equip.SetActive(true);
         unequip.SetActive(false);
     }
@@ -267,6 +277,7 @@ public class ShopManager : MonoBehaviour
             SaveDataSkin();
             InitData();
             ChooseSkin(index);
+            Equip();
         }
 
     }

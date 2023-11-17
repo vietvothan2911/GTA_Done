@@ -10,11 +10,8 @@ public class PlayerSensorVehicles : IHumanSensor
         {
             if (other.GetComponent<VehicleSensor>() != null)
             {
+
                 ControlsManager.ins.Control[0].GetComponent<CharacterControl>().getInVehicles.SetActive(true);
-                if (other.gameObject.transform.parent = null)
-                {
-                    return;
-                }
                 ObjectCollision = other.gameObject.transform.parent;
 
             }
@@ -24,10 +21,7 @@ public class PlayerSensorVehicles : IHumanSensor
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.transform.parent = null)
-        {
-            return;
-        }
+       
         if (ObjectCollision == other.gameObject.transform.parent)
         {
             ObjectCollision = null;
