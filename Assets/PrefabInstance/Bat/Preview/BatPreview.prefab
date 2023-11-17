@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1495136904938158}
-  m_LocalRotation: {x: -0, y: -0, z: 0.3133279, w: 0.949645}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 0.70000005, y: 0.70000005, z: 0.7}
   m_Children: []
   m_Father: {fileID: 4803940665476220}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -0, z: -36.519802}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33393991101952132
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -90,6 +90,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4803940665476220}
+  - component: {fileID: 7248576975983967478}
+  - component: {fileID: 3718133975882890664}
   m_Layer: 20
   m_Name: BatPreview
   m_TagString: Untagged
@@ -112,3 +114,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
+--- !u!114 &7248576975983967478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709907283166000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b43a70eb00e916d4e933fcead6d9042d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meleeWeapons: 0
+  HumanLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  cod: {fileID: 3718133975882890664}
+  npc: {fileID: 0}
+  dame: 10
+--- !u!65 &3718133975882890664
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709907283166000}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.13170709, y: 0.79723763, z: 0.15321103}
+  m_Center: {x: -0.022426933, y: 0.5627383, z: -0.0019564629}

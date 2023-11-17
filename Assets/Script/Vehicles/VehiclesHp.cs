@@ -46,7 +46,11 @@ public class VehiclesHp : MonoBehaviour
     public void DistancePlayer()
     {
         float distance = Vector3.Distance(transform.position, Player.ins.transform.position);
-
+      
+        if (car._driver == Player.ins.gameObject)
+        {
+            Debug.Log(distance);
+        }
         if (distance >= 50 && car._driver == null)
         {
             //NPCManager.ins.npcPooling.ReturnPool(gameObject, 0.1f);

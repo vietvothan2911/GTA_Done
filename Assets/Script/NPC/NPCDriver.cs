@@ -118,22 +118,23 @@ public class NPCDriver : MonoBehaviour
     {
 
 
-        if (sensor.collisionwithhuman || sensor.collisionwithtrafficlight)
+        if (sensor.collisionwithhuman )
         {
             driverVehicles._rb.isKinematic = true;
             currentspeed = 0;
-            //forward = 0;
+            forward = 0;
         }
-        else if ( sensor.collisionwithobject)
+        else if ( sensor.collisionwithobject || sensor.collisionwithtrafficlight)
         {
             float CosAngle = Vector3.Dot(sensor.objcollisionwithvehicles.transform.position - Vehiclel.transform.position, Vehiclel.transform.forward);
             if (CosAngle < 0)
             {
-                driverVehicles._rb.isKinematic = false;
+                //driverVehicles._rb.isKinematic = false;
                 currentspeed = npcControl.chacractorData.speed;
+                forward = 0;
                 return;
             }
-            driverVehicles._rb.isKinematic = true;
+            //driverVehicles._rb.isKinematic = true;
             currentspeed = 0;
         }
 
@@ -141,6 +142,7 @@ public class NPCDriver : MonoBehaviour
         else
         {
             currentspeed = npcControl.chacractorData.speed;
+            forward = 1;
             driverVehicles._rb.isKinematic = false;
         }
 
@@ -250,6 +252,7 @@ public class NPCDriver : MonoBehaviour
       
         candriver = false;
         transform.parent = null;
+        Vehiclel = null;
         if (npcControl.chacractorData.vehicle == SelectVehicles.Car)
         {
 
@@ -262,10 +265,11 @@ public class NPCDriver : MonoBehaviour
 
         }
         npcControl.npcState.ChangeState(SelectState.Attack);
+
     }
     public void GetOutCar(bool isEject, float side )
     {
-        driverVehicles = null;
+       
         if (isEject)
         {
             transform.position = driverVehicles._enterFormPos[0].position;
@@ -276,6 +280,7 @@ public class NPCDriver : MonoBehaviour
             npcControl.animator.Play("GetOutCar");
             npcControl.animator.applyRootMotion = true;
         }
+        driverVehicles = null;
     }
     public void GetOutMotor(bool isEject, float side)
     {
@@ -287,7 +292,8 @@ public class NPCDriver : MonoBehaviour
         {
             npcControl.animator.SetTrigger("GetOutVehicles");
         }
-       
+        driverVehicles = null;
+
     }
     //IEnumerator StopVehicles()
     //{

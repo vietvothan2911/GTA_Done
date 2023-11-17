@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Man
   m_EditorClassIdentifier: 
   role: 0
-  meleeWeapons: 0
+  meleeWeapons: 1
   rangedWeapons: 3
-  meleeWeapon: {fileID: 0}
+  meleeWeapon: {fileID: 4123926533234736318, guid: 6d3da1170c544c349aa6ace05c5c99dd, type: 3}
   rangedWeapon: {fileID: 1179571918604148, guid: d2a2937dff12ca74c8a4a69c56e17837, type: 3}
   vehicle: 1
   vehiclePrefab: {fileID: 6837210796099964635, guid: 63a1b75ed67196047888354af081dcf5, type: 3}
