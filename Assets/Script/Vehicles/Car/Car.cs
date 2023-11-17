@@ -63,7 +63,7 @@ public class Car : MonoBehaviour, IDriverVehicles
             MoveVehicle(acceleration, maxspeed);
             VehicleSteering(horizontal);
             UpdateVehicleSteering();
-            if (Input.GetKey(KeyCode.A))
+          if (Input.GetKey(KeyCode.A))
             {
                 VehicleSteering(-1);
             }
