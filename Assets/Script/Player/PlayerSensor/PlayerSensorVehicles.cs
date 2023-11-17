@@ -11,7 +11,7 @@ public class PlayerSensorVehicles : IHumanSensor
             if (other.GetComponent<VehicleSensor>() != null)
             {
                 ControlsManager.ins.Control[0].GetComponent<CharacterControl>().getInVehicles.SetActive(true);
-                ObjectCollision = other.gameObject.transform.parent.gameObject;
+                ObjectCollision = other.gameObject.transform.parent;
 
             }
 
@@ -24,7 +24,7 @@ public class PlayerSensorVehicles : IHumanSensor
         {
             return;
         }
-        if (ObjectCollision == other.gameObject.transform.parent.gameObject)
+        if (ObjectCollision == other.gameObject.transform.parent)
         {
             ObjectCollision = null;
             ControlsManager.ins.Control[0].GetComponent<CharacterControl>().getInVehicles.SetActive(false);

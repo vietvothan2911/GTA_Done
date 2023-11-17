@@ -42,7 +42,7 @@ public class PlayerShootLaser : MonoBehaviour
         else
         {
             if (!Player.ins.playerHP.infiniteStamina)
-                Player.ins.playerHP.LoseStamina(0.05f);
+                Player.ins.playerHP.LoseStamina(0.25f);
 
             if (laser == null)
             {

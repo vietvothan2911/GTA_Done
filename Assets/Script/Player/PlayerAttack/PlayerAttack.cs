@@ -7,7 +7,7 @@ public class PlayerAttack : MonoBehaviour
     public SelectWeapon selectWeapon;
     public GameObject _weapon;
     public List<Collider> hitBoxs;
-    public GameObject enemy;
+    public Transform enemy;
     public float dame;
     public bool ishit;
     public void Attack(bool isAttack)
@@ -64,7 +64,7 @@ public class PlayerAttack : MonoBehaviour
 
             if (directionToEnemy.magnitude > 1)
             {
-                if (directionToEnemy.magnitude > 15 || !enemy.activeSelf)
+                if (directionToEnemy.magnitude > 15 || !enemy.gameObject.activeSelf)
                 {
                     enemy = null;
                     return;

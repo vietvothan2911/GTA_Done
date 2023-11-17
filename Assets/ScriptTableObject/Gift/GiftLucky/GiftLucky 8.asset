@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: GiftLucky 8
   m_EditorClassIdentifier: 
   gift: 3
-  indexGift: 1000
+  indexGift: 500

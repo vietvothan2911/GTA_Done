@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using System.Xml.Serialization;
 using UnityEngine;
 //using static UnityEditor.PlayerSettings;
@@ -116,7 +117,7 @@ public class NPCPooling : MonoBehaviour
 
     public void ReturnPool(GameObject npc, float time)
     {
-        Debug.LogError("check");
+       
         StartCoroutine(CouroutineReturnPool(npc, time));
     }
     IEnumerator CouroutineReturnPool(GameObject npc, float time)
@@ -184,6 +185,21 @@ public class NPCPooling : MonoBehaviour
         NPC.npcState.ChangeState(SelectState.Move);
         NPC.pointtarget = NPC.lastpoint;
         npc.SetActive(false);
+    }
+
+    public void StartPoliceWanter()
+    {
+        if (NPCPolicePool.Count != 0)
+        {
+            for (int i = 0; i < NPCPolicePool.Count; i++)
+            {
+                if (NPCPolicePool[i].activeSelf == true && NPCPolicePool[i].GetComponent<NPCState>().currentState != SelectState.Attack)
+                {
+                    NPCPolicePool[i].GetComponent<NPCState>().ChangeState(SelectState.Attack);
+                }
+
+            }
+        }
     }
 
     public void EndStarPolice()

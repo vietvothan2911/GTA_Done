@@ -166,6 +166,10 @@ public class PlayerHP : MonoBehaviour
 
     public void LoseStamina(float _stamina)
     {
+        if(stamina <= 3)
+        {
+            StaminaBonus.ins.Init();
+        }
         stamina -= _stamina;
         if (stamina <= 0)
         {
