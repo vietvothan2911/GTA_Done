@@ -16,7 +16,7 @@ public class VehicleSensor : MonoBehaviour
     public GameObject objcollisionwithvehicles;
     public GameObject objcollisionwithtrafficlight;
 
-    private void Awake()
+    private void Start()
     {
         driverVehicles = transform.parent.GetComponent<IDriverVehicles>();
     }
@@ -38,7 +38,7 @@ public class VehicleSensor : MonoBehaviour
         if (driverVehicles._driver == null) return;
         if (GameManager.ins.layerData.HumanLayer == (GameManager.ins.layerData.HumanLayer | (1 << other.gameObject.layer)))
         {
-            
+
             if (other.gameObject.transform.parent.gameObject == driverVehicles._driver) return;
             if (other.gameObject.CompareTag("Player"))
             {

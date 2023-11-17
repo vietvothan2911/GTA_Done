@@ -7,7 +7,7 @@ using UnityEngine.AI;
 public class PlayerGetVehicle : MonoBehaviour
 {
     public NavMeshAgent navMeshAgent;
-    public GameObject vehicle;
+    public Transform vehicle;
     public List<Transform> enterFormPos;
     public LayerMask obstacleMask;
     public int side;

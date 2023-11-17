@@ -7,21 +7,17 @@ public class PlayerSensor : MonoBehaviour
     [SerializeField] PlayerSensorHuman human;
     [SerializeField] PlayerSensorVehicles vehicle;
 
-    public GameObject ReturnHuman()
+    public Transform ReturnHuman()
     {
-        if (human.ObjectCollision != null)
-        {
+       
             return human.ObjectCollision;
-        }
-        return null;
+       
     }
-    public GameObject ReturnVehicle()
+    public Transform ReturnVehicle()
     {
-        if (vehicle.ObjectCollision != null)
-        {
+        
             return vehicle.ObjectCollision;
-        }
-        return null;
+       
     }
 
 }

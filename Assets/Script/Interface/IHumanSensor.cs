@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class IHumanSensor : MonoBehaviour
 {
-    public GameObject ObjectCollision;
+    public Transform ObjectCollision;
 
     void OnTriggerEnter(Collider other)
     {

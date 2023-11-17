@@ -17,7 +17,7 @@ public class PointAIMove : MonoBehaviour
     private void OnEnable()
     {
       
-        time = Random.Range(0, 3);
+        time = Random.Range(1, 3);
         Invoke("SpawnNpc", time);
       
     }
@@ -26,6 +26,7 @@ public class PointAIMove : MonoBehaviour
         if (!canSpawn) return;
         Transform nextpoint = RandomNextPoint();
         float dis = Vector3.Distance(transform.position, Player.ins.transform.position);
+        if (CheckObstruction()) return;
         if (dis < SpawnNpcManager.ins.mindistance || dis > SpawnNpcManager.ins.maxdistance) return;
         //if (currentState == SelectState.Move)
         //{
@@ -39,18 +40,16 @@ public class PointAIMove : MonoBehaviour
             if (newNpc == null) return;
         }
     }
-    public void ContinueSpawn()
+    IEnumerator ContinueSpawn()
     {
-        CancelInvoke("SpawnNPC");
-        if (gameObject.activeSelf)
-        {
-            Invoke("SpawnNPC", SpawnNpcManager.ins.timedelay);
-        }
-        else
-        {
-            return;
-        }
+        yield return new WaitForSeconds(SpawnNpcManager.ins.timedelay);
+            SpawnNpc();
        
+    }
+    public bool CheckObstruction()
+    {
+        bool isObstruction = Physics.CheckSphere(transform.position, 3f, GameManager.ins.layerData.VehiclesLayer);
+        return isObstruction;
     }
     public void Init()
     {
@@ -61,7 +60,7 @@ public class PointAIMove : MonoBehaviour
 
     public Transform RandomNextPoint()
     {
-        ContinueSpawn();
+        StartCoroutine(ContinueSpawn());
         if (nextpoint.Count > 0)
         {
 
