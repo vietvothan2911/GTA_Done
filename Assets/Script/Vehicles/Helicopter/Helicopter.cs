@@ -8,6 +8,9 @@ public class Helicopter : MonoBehaviour, IDriverVehicles
     public GameObject helicopter;
     public PointVehicles pointVehicles;
     public VehicleSensor sensor;
+    public VehiclesData heliData;
+    public VehiclesData _vehiclesData { get; set; }
+    public Transform _damepoint { get; set; }
     public GameObject _vehicles { get; set; }
     public VehicleSensor _sensor { get; set; }
     public Rigidbody _rb { get; set; }
@@ -22,26 +25,6 @@ public class Helicopter : MonoBehaviour, IDriverVehicles
     public BladeRotation bladeRotation;
     [Header("Helicopter Engine")]
     public float enginePower;
-    void Awake()
-    {
-        _enterFormPos = pointVehicles.enterFormPos;
-        _driverSit = pointVehicles.driverSit;
-        _exitForce = pointVehicles.exitforce;
-        _camtarget = pointVehicles.camtarget;
-        _rb = GetComponent<Rigidbody>();
-        _sensor = sensor;
-        _vehicles = gameObject;
-    }
-    public void DriverVehicles(float acceleration, float vertical, float horizontal, float maxspeed)
-    {
-        CheckOnGround(vertical, horizontal, acceleration);
-        //shootingHelicopter.ShootingBullet(helicopterControl.shootingBullet);
-        //shootingHelicopter.ShootingRocket(helicopterControl.shootingRocket);
-        HelicopterHover();
-        HelicopterMovement();
-        HelicopterTilting();
-        Player.ins.animator.SetBool("OnGround", onSurface);
-    }
     public float EnginePower
     {
         get { return enginePower; }
@@ -53,17 +36,33 @@ public class Helicopter : MonoBehaviour, IDriverVehicles
     }
     public float effectiveHeight;
     public float engineLift = 0.0075f;
-    public float ForwardFoce;
-    public float BackwardFoce;
-    public float ForwardtiltFoce;
-    public float TurntiltFoce;
     private Vector2 Movement = Vector2.zero;
     private Vector2 Tilting = Vector2.zero;
     public bool onSurface;
     [SerializeField] Transform surfaceCheck;
     [SerializeField] float surfaceDistance = 0.4f;
     public LayerMask surfaceMask;
-
+    void Awake()
+    {
+        _enterFormPos = pointVehicles.enterFormPos;
+        _driverSit = pointVehicles.driverSit;
+        _camtarget = pointVehicles.camtarget;
+        _rb = GetComponent<Rigidbody>();
+        _sensor = sensor;
+        _vehicles = gameObject;
+        _damepoint = pointVehicles.damePoint;
+        _vehiclesData = heliData;
+    }
+    public void DriverVehicles(float acceleration, float vertical, float horizontal, float maxspeed)
+    {
+        CheckOnGround(vertical, horizontal, acceleration);
+        //shootingHelicopter.ShootingBullet(helicopterControl.shootingBullet);
+        //shootingHelicopter.ShootingRocket(helicopterControl.shootingRocket);
+        HelicopterHover();
+        HelicopterMovement();
+        HelicopterTilting();
+        Player.ins.animator.SetBool("OnGround", onSurface);
+    }
     public void CheckOnGround(float vertical, float horizontal, float acceleration)
     {
         onSurface = Physics.CheckSphere(surfaceCheck.position, surfaceDistance, surfaceMask);
@@ -75,7 +74,7 @@ public class Helicopter : MonoBehaviour, IDriverVehicles
             if (acceleration < 0)
             {
 
-                EnginePower = Mathf.Clamp(EnginePower - engineLift, -100, 10);
+                EnginePower = Mathf.Clamp(EnginePower - engineLift, -heliData.maxspeed, 10);
                 _rb.constraints &= ~RigidbodyConstraints.FreezePositionY;
 
             }
@@ -91,7 +90,7 @@ public class Helicopter : MonoBehaviour, IDriverVehicles
             }
             else
             {
-                EnginePower = Mathf.Clamp(EnginePower + engineLift, 10, 100);
+                EnginePower = Mathf.Clamp(EnginePower + engineLift, 10, heliData.maxspeed);
                 _rb.constraints &= ~RigidbodyConstraints.FreezePositionY;
             }
         }
@@ -99,7 +98,7 @@ public class Helicopter : MonoBehaviour, IDriverVehicles
         {
             if (acceleration > 0)
             {
-                EnginePower = Mathf.Clamp(EnginePower + engineLift, 0, 100);
+                EnginePower = Mathf.Clamp(EnginePower + engineLift, 0, heliData.maxspeed);
                 //_rb.isKinematic = false;
             }
             else
@@ -113,7 +112,9 @@ public class Helicopter : MonoBehaviour, IDriverVehicles
 
 
     }
-
+    public void ApplyBreaks(float breakingForce)
+    {
+    }
     public void HelicopterHover()
     {
         bladeRotation.BladeRotate();
@@ -129,19 +130,19 @@ public class Helicopter : MonoBehaviour, IDriverVehicles
     {
         if (Movement.y > 0)
         {
-            _rb.AddRelativeForce(Vector3.forward * Mathf.Max(0f, Movement.y * ForwardFoce * _rb.mass));
+            _rb.AddRelativeForce(Vector3.forward * Mathf.Max(0f, Movement.y * heliData.accelerationForce * _rb.mass));
         }
         else if (Movement.y < 0)
         {
-            _rb.AddRelativeForce(Vector3.back * Mathf.Max(0f, -Movement.y * ForwardFoce * _rb.mass));
+            _rb.AddRelativeForce(Vector3.back * Mathf.Max(0f, -Movement.y * heliData.accelerationForce * _rb.mass));
         }
         if (Movement.x > 0)
         {
-            _rb.AddRelativeForce(Vector3.right * Mathf.Max(0f, Movement.x * ForwardFoce * _rb.mass));
+            _rb.AddRelativeForce(Vector3.right * Mathf.Max(0f, Movement.x * heliData.accelerationForce * _rb.mass));
         }
         else if (Movement.x < 0)
         {
-            _rb.AddRelativeForce(Vector3.left * Mathf.Max(0f, -Movement.x * ForwardFoce * _rb.mass));
+            _rb.AddRelativeForce(Vector3.left * Mathf.Max(0f, -Movement.x * heliData.accelerationForce * _rb.mass));
         }
 
         if (!onSurface)
@@ -151,8 +152,8 @@ public class Helicopter : MonoBehaviour, IDriverVehicles
     }
     public void HelicopterTilting()
     {
-        Tilting.y = Mathf.Lerp(Tilting.y, Movement.y * ForwardtiltFoce, Time.deltaTime);
-        Tilting.x = Mathf.Lerp(Tilting.x, Movement.x * TurntiltFoce, Time.deltaTime);
+        Tilting.y = Mathf.Lerp(Tilting.y, Movement.y * heliData.wheelsTorque, Time.deltaTime);
+        Tilting.x = Mathf.Lerp(Tilting.x, Movement.x * heliData.wheelsTorque, Time.deltaTime);
         _rb.transform.localRotation = Quaternion.Euler(Tilting.y, _rb.transform.localEulerAngles.y, -Tilting.x);
 
     }
@@ -171,5 +172,25 @@ public class Helicopter : MonoBehaviour, IDriverVehicles
             yield return null;
         }
         yield break;
+    }
+    public void Return()
+    {
+        StartCoroutine(CouroutineReturn());
+    }
+    IEnumerator CouroutineReturn()
+    {
+        yield return new WaitForSeconds(5f);
+        if (_driver != null)
+        {
+            yield break;
+        }
+        if (Vector3.Distance(transform.position, Player.ins.transform.position) > 100)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            StartCoroutine(CouroutineReturn());
+        }
     }
 }

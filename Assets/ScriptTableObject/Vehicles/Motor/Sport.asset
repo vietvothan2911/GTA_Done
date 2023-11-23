@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9998ea8b599935459c3dac6ed3092b7, type: 3}
   m_Name: Sport
   m_EditorClassIdentifier: 
-  motorType: 2
+  selectVehiclesDetroy: 9
+  HP: 300
+  wantedPoint: 8
   maxspeed: 20
   accelerationForce: 500
   wheelsTorque: 30
   breakingForce: 100
   breakingForceMax: 2000
-  ForwardtiltFoce: 20
-  TurntiltFoce: 20
+  type: 2
+  motorType: 2

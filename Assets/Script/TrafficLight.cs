@@ -7,14 +7,15 @@ public class TrafficLight : MonoBehaviour
     public GameObject redLight;
     public GameObject greenLight;
     public GameObject yellowLight;
-    public GameObject Collider;
-   
+    public GameObject CarCollider;
+    public List<GameObject> PedestrianCollider=new List<GameObject>();
+
     public void Red()
     {
         redLight.SetActive(true);
         yellowLight.SetActive(false);
         greenLight.SetActive(false);
-        Collider.SetActive(true);
+       
     }
     public void Green()
     {
@@ -27,8 +28,25 @@ public class TrafficLight : MonoBehaviour
         yellowLight.SetActive(true);
         greenLight.SetActive(false);
         redLight.SetActive(false);
-        Collider.SetActive(false);
+       
 
     }
+    public void Carcollider()
+    {
+        CarCollider.SetActive(true);
+        foreach (var pedestrian in PedestrianCollider)
+        {
+            pedestrian.SetActive(false);
+        }
+    }
+    public void Pedestriancollider()
+    {
+        CarCollider.SetActive(false);
+        foreach (var pedestrian in PedestrianCollider)
+        {
+            pedestrian.SetActive(true);
+        }
+    }
+
 
 }

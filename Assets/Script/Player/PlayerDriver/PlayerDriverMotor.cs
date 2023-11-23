@@ -19,7 +19,7 @@ public class PlayerDriverMotor : MonoBehaviour
         _animator.SetTrigger("GetInVehicles");
         _animator.SetInteger("VehiclesType", 0);
         _animator.SetFloat("Side", side);
-        _animator.SetFloat("MotorType", ((int)motor.motorData.motorType));
+        _animator.SetFloat("MotorType", ((int)motor.motorData.type));
         if (motor._driver != null)
         {
             Player.ins.animator.SetBool("IsEject", true);
@@ -94,7 +94,7 @@ public class PlayerDriverMotor : MonoBehaviour
         transform.parent.parent = null;
         Player.ins.ChangeControl(0);
         Player.ins.characterController.enabled = true;
-
+       
 
     }
 }

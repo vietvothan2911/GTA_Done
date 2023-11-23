@@ -20,25 +20,35 @@ public class VehicleSensor : MonoBehaviour
     {
         driverVehicles = transform.parent.GetComponent<IDriverVehicles>();
     }
-    public void CheckExitTrafficlight()
+    private void OnEnable()
     {
+        collisionwithhuman = false;
+        collisionwithobject = false;
+        collisionwithvehicles = false;
+        collisionwithtrafficlight = false;
+
+    }
+    IEnumerator CheckExitTrafficlight()
+    {
+        yield return new WaitForSeconds(2);
         if (objcollisionwithtrafficlight.activeSelf)
         {
-            Invoke("CheckExitTrafficlight", 2);
+            StartCoroutine(CheckExitTrafficlight());
         }
         else
         {
             collisionwithtrafficlight = false;
+            yield break;
         }
     }
-   
     private void OnTriggerEnter(Collider other)
     {
-
+       
         if (driverVehicles._driver == null) return;
         if (GameManager.ins.layerData.HumanLayer == (GameManager.ins.layerData.HumanLayer | (1 << other.gameObject.layer)))
         {
 
+            if (other.gameObject.transform.parent==null) return;
             if (other.gameObject.transform.parent.gameObject == driverVehicles._driver) return;
             if (other.gameObject.CompareTag("Player"))
             {
@@ -46,56 +56,131 @@ public class VehicleSensor : MonoBehaviour
                 {
                     collisionwithhuman = true;
                     objcollisionwithhuman = Player.ins.gameObject;
+                    StartCoroutine(CheckExitHuman());
                 }
             }
             else
             {
                 collisionwithhuman = true;
                 objcollisionwithhuman = other.gameObject.transform.parent.gameObject;
+                StartCoroutine(CheckExitHuman());
             }
 
         }
-        else if (GameManager.ins.layerData.VehiclesLayer == (GameManager.ins.layerData.VehiclesLayer | (1 << other.gameObject.layer)))
+         if (GameManager.ins.layerData.VehiclesLayer == (GameManager.ins.layerData.VehiclesLayer | (1 << other.gameObject.layer)))
         {
             collisionwithvehicles = true;
             objcollisionwithvehicles = other.gameObject.transform.parent.gameObject;
+            StartCoroutine(CheckExitVehicles());
         }
-        else if (GameManager.ins.layerData.ObstacleLayer == (GameManager.ins.layerData.ObstacleLayer | (1 << other.gameObject.layer)))
+         if (GameManager.ins.layerData.ObstacleLayer == (GameManager.ins.layerData.ObstacleLayer | (1 << other.gameObject.layer)))
         {
             collisionwithobject = true;
             objcollisionwithobject = other.gameObject.transform.parent.gameObject;
+            StartCoroutine(CheckExitObject());
 
         }
-        else if (GameManager.ins.layerData.Trafficlight == (GameManager.ins.layerData.Trafficlight | (1 << other.gameObject.layer)))
+        if (GameManager.ins.layerData.Trafficlight == (GameManager.ins.layerData.Trafficlight | (1 << other.gameObject.layer)))
         {
             collisionwithtrafficlight = true;
-            objcollisionwithtrafficlight = other.gameObject.transform.parent.gameObject;
-            Invoke("CheckExitTrafficlight", 2);
+            objcollisionwithtrafficlight = other.gameObject;
+            StartCoroutine(CheckExitTrafficlight());
         }
 
 
+
+    }
+    public void Return()
+    {
+        StopAllCoroutines();
+        driverVehicles._driver.transform.parent = null;
+        driverVehicles._driver.SetActive(false);
+        driverVehicles._driver = null;
+        transform.parent.gameObject.SetActive(false);
+
+    }
+
+
+    IEnumerator CheckExitHuman()
+    {
+        yield return new WaitForSeconds(5);
+
+        
+        if (Vector3.Distance(transform.position, Player.ins.transform.position) > 100)
+        {
+            Return();
+            yield break;
+
+        }
+        else if (!objcollisionwithhuman.activeSelf||Vector3.Distance(transform.position,objcollisionwithhuman.transform.position)>5)
+        {
+            collisionwithhuman = false;
+            yield break;
+           
+        }
+        else
+        {
+            StartCoroutine(CheckExitHuman());
+        }
+    }
+    IEnumerator CheckExitVehicles()
+    {
+        yield return new WaitForSeconds(5);
+
+
+        if (Vector3.Distance(transform.position, Player.ins.transform.position) > 100)
+        {
+            Return();
+            yield break;
+
+        }
+        else if (!objcollisionwithvehicles.activeSelf || Vector3.Distance(transform.position, objcollisionwithvehicles.transform.position) >10)
+        {
+            collisionwithvehicles = false;
+            yield break;
+
+        }
+        else
+        {
+            StartCoroutine(CheckExitVehicles());
+        }
+    }
+    IEnumerator CheckExitObject()
+    {
+        yield return new WaitForSeconds(5);
+
+
+        if (Vector3.Distance(transform.position, Player.ins.transform.position) > 100)
+        {
+            Return();
+            yield break;
+
+        }
+        else
+        {
+            StartCoroutine(CheckExitObject());
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
 
-        if (GameManager.ins.layerData.HumanLayer == (GameManager.ins.layerData.HumanLayer | (1 << other.gameObject.layer)))
+
+        if (other.gameObject.CompareTag("Player"))
         {
             collisionwithhuman = false;
-
-
         }
-        else if (GameManager.ins.layerData.VehiclesLayer == (GameManager.ins.layerData.VehiclesLayer | (1 << other.gameObject.layer)))
+        else if (objcollisionwithhuman == other.gameObject.transform.parent.gameObject)
+        {
+            collisionwithhuman = false;
+        }
+        else if (objcollisionwithvehicles == other.gameObject.transform.parent.gameObject)
         {
             collisionwithvehicles = false;
         }
-        else if (GameManager.ins.layerData.ObstacleLayer == (GameManager.ins.layerData.ObstacleLayer | (1 << other.gameObject.layer)))
+        else if (objcollisionwithobject == other.gameObject.transform.parent.gameObject)
         {
             collisionwithobject = false;
-        }
-        else if (GameManager.ins.layerData.Trafficlight == (GameManager.ins.layerData.Trafficlight | (1 << other.gameObject.layer)))
-        {
-            collisionwithtrafficlight = false;
         }
 
     }

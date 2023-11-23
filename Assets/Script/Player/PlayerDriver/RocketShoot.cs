@@ -10,7 +10,7 @@ public class RocketShoot : MonoBehaviour
     {
         if (!other.CompareTag("Player") && !other.CompareTag("HitSensor"))
         {
-            Debug.LogError(other.gameObject.tag);
+          
             ParticleSystem hit = FxPooling.ins.GetrocketHitPool(transform.position);
             gameObject.SetActive(false);
         }

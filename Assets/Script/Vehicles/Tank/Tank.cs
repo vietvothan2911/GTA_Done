@@ -5,10 +5,12 @@ using UnityEngine;
 public class Tank : MonoBehaviour, IDriverVehicles
 {
     [Header("TankInfo")]
-    public CarData carData;
+    public VehiclesData tankData;
     public PointVehicles pointVehicles;
     public ShootingTank shootingTank;
     public VehicleSensor sensor;
+    public VehiclesData _vehiclesData { get; set; }
+    public Transform _damepoint { get; set; }
     public GameObject _vehicles { get; set; }
     public VehicleSensor _sensor { get; set; }
     public Rigidbody _rb { get; set; }
@@ -53,14 +55,14 @@ public class Tank : MonoBehaviour, IDriverVehicles
     void Awake()
     {
         _enterFormPos = pointVehicles.enterFormPos;
-        _maxspeed = carData.maxspeed;
+        _maxspeed = tankData.maxspeed;
         _driverSit = pointVehicles.driverSit;
-        _exitForce = pointVehicles.exitforce;
         _camtarget = pointVehicles.camtarget;
         _rb = GetComponent<Rigidbody>();
-
+        _damepoint = pointVehicles.damePoint;
         _sensor = sensor;
         _vehicles = gameObject;
+        _vehiclesData = tankData;
     }
     public void DriverVehicles(float acceleration, float vertical, float horizontal, float maxspeed)
     {
@@ -103,20 +105,11 @@ public class Tank : MonoBehaviour, IDriverVehicles
         if (Vertical != 0)
         {
             _rb.isKinematic = false;
-            for (int i = 0; i < LeftWheelCollider.Count; i++)
-            {
-                LeftWheelCollider[i].brakeTorque = 0;
-                RightWheelCollider[i].brakeTorque = 0;
-            }
+            ApplyBreaks(0);
             if (Vertical * forwardSpeed < 0 && _rb.velocity.magnitude >= 1)
             {
 
-                for (int i = 0; i < LeftWheelCollider.Count; i++)
-                {
-
-                    LeftWheelCollider[i].brakeTorque = carData.breakingForceMax;
-                    RightWheelCollider[i].brakeTorque = carData.breakingForceMax;
-                }
+                ApplyBreaks(tankData.breakingForceMax);
                 presentAcceleration = 0;
 
             }
@@ -124,7 +117,7 @@ public class Tank : MonoBehaviour, IDriverVehicles
             {
                 if (_rb.velocity.magnitude <= speed)
                 {
-                    presentAcceleration = Vertical * carData.accelerationForce;
+                    presentAcceleration = Vertical * tankData.accelerationForce;
                 }
                 else
                 {
@@ -139,16 +132,7 @@ public class Tank : MonoBehaviour, IDriverVehicles
         else
         {
             presentAcceleration = 0;
-            for (int i = 0; i < LeftWheelCollider.Count; i++)
-            {
-
-                LeftWheelCollider[i].brakeTorque = carData.breakingForceMax;
-                RightWheelCollider[i].brakeTorque = carData.breakingForceMax;
-            }
-            //if(_rb.velocity.magnitude >= 1)
-            //{
-            //    _rb.isKinematic = true;
-            //}
+            ApplyBreaks(tankData.breakingForce);
            
         }
 
@@ -160,7 +144,15 @@ public class Tank : MonoBehaviour, IDriverVehicles
 
 
     }
+    public void ApplyBreaks(float breakingForce)
+    {
+        for (int i = 0; i < LeftWheelCollider.Count; i++)
+        {
 
+            LeftWheelCollider[i].brakeTorque = tankData.breakingForceMax;
+            RightWheelCollider[i].brakeTorque = tankData.breakingForceMax;
+        }
+    }
     public void ChainSteering(float forwardSpeed)
     {
         if (forwardSpeed > 0)
@@ -178,7 +170,7 @@ public class Tank : MonoBehaviour, IDriverVehicles
     {
         //if (Horizontal != 0)
         //{
-            Quaternion newRotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.eulerAngles.y + Horizontal * carData.wheelsTorque, transform.rotation.z));
+            Quaternion newRotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.eulerAngles.y + Horizontal * tankData.wheelsTorque, transform.rotation.z));
 
             transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, speedrotate * Time.fixedDeltaTime);
         //}
@@ -242,5 +234,25 @@ public class Tank : MonoBehaviour, IDriverVehicles
         float clampedXAngle = Mathf.Clamp(targetXAngle, maxGunAngle_elevation, minGunAngle_depression);
         barrel.transform.localRotation = Quaternion.Euler(clampedXAngle, 0f, 0f);
 
+    }
+    public void Return()
+    {
+        StartCoroutine(CouroutineReturn());
+    }
+    IEnumerator CouroutineReturn()
+    {
+        yield return new WaitForSeconds(5f);
+        if (_driver != null)
+        {
+            yield break;
+        }
+        if (Vector3.Distance(transform.position, Player.ins.transform.position) > 100)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            StartCoroutine(CouroutineReturn());
+        }
     }
 }

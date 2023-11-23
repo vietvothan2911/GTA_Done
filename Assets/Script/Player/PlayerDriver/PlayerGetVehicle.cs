@@ -197,6 +197,7 @@ public class PlayerGetVehicle : MonoBehaviour
             Player.ins.playerDriverHelicopter.GetOutHelicopter();
             return;
         }
+        driverVehicles.Return();
     }
 
 

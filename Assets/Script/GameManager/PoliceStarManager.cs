@@ -13,13 +13,9 @@ public class PoliceStarManager : MonoBehaviour
     private List<Image> images;
 
     [SerializeField]
-    private int indexWanter;
-
+    public int indexWanter;
     [SerializeField]
-    private NPCPooling npcPooling;
-
-    [SerializeField]
-    private int wanterPoint;
+    private float wanterPoint;
 
     [SerializeField]
     private List<bool> isPoliceSpawns;
@@ -51,7 +47,7 @@ public class PoliceStarManager : MonoBehaviour
         police.Add(_police);
     }
 
-    public void ChangeWanterPoint(int _wanterPoint)
+    public void ChangeWanterPoint(float _wanterPoint)
     {
         
 
@@ -138,33 +134,43 @@ public class PoliceStarManager : MonoBehaviour
                 images[i].fillAmount = 0;
             }
         }
-
+        if (indexWanter == 0) return;
+        PoolingManager.ins.policePooling.StartPoliceWanter();
         if (indexWanter == 1)
         {
-            SpawnNPCInit.ins.maxPolice = 3;
+            //SpawnNPCInit.ins.maxPolice = 3;
+            PoolingManager.ins.policePooling.maxNpcMove = 2;
 
         }
         else if (indexWanter == 2)
         {
-            SpawnNPCInit.ins.maxPolice = 4;
+            //SpawnNPCInit.ins.maxPolice = 4;
+            PoolingManager.ins.policePooling.maxNpcMove = 3;
         }
         else if (indexWanter == 3)
         {
-            SpawnNPCInit.ins.maxPolice = 5;
+            //SpawnNPCInit.ins.maxPolice = 5;
+            PoolingManager.ins.policePooling.maxNpcMove = 3;
+            PoolingManager.ins.policePooling.maxNpcDriver = 1;
         }
         else if (indexWanter == 4)
         {
-            SpawnNPCInit.ins.maxPolice = 6;
+            //SpawnNPCInit.ins.maxPolice = 6;
+            PoolingManager.ins.policePooling.maxNpcMove = 4;
+            PoolingManager.ins.policePooling.maxNpcDriver = 2;
 
         }
         else if (indexWanter == 5)
         {
-            SpawnNPCInit.ins.maxPolice = 7;
-
+            //SpawnNPCInit.ins.maxPolice = 7;
+            PoolingManager.ins.policePooling.maxNpcMove = 5;
+            PoolingManager.ins.policePooling.maxNpcDriver = 3;
         }
         else
         {
-            SpawnNPCInit.ins.maxPolice = 3;
+            //SpawnNPCInit.ins.maxPolice = 3;
+            PoolingManager.ins.policePooling.maxNpcMove = 2;
+            PoolingManager.ins.policePooling.maxNpcDriver = 0;
         }
     }
 
@@ -173,7 +179,7 @@ public class PoliceStarManager : MonoBehaviour
         indexWanter = 0;
         wanterPoint = 0;
         ChangeStarWanter(0);
-        npcPooling.EndStarPolice();
+        //npcPooling.EndStarPolice();
         for (int i = 0; i < isPoliceSpawns.Count; i++)
         {
             isPoliceSpawns[i] = false;

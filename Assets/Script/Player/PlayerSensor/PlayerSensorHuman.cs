@@ -8,7 +8,7 @@ public class PlayerSensorHuman : IHumanSensor
     {
         if (GameManager.ins.layerData.HumanLayer == (GameManager.ins.layerData.HumanLayer | (1 << other.gameObject.layer)))
         {
-
+            if (other.gameObject.transform.parent==null) return;
             if (other.gameObject.transform.parent.gameObject == transform.parent.gameObject) return;
 
             if (other.gameObject.transform.parent == transform) return;

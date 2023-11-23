@@ -56,15 +56,15 @@ public class NPCMovement : MonoBehaviour
        
         while (canmove)
         {
-
+           
             npcControl.navMeshAgent.enabled = true;
            
             npcControl.animator.applyRootMotion = false;
          
              bool isGrounded= npcControl.animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded") ;
-            if (isGrounded)
+            if (isGrounded&&!CheckCollision())
             {
-                Quaternion targetRotation = Quaternion.LookRotation(npcControl.navMeshAgent.velocity.normalized, Vector3.up);
+                Quaternion targetRotation = Quaternion.LookRotation(npcControl.navMeshAgent.velocity.normalized);
                 transform.rotation = targetRotation;
                 ismove = true;
                 npcControl.animator.SetFloat("Forward", forward);
@@ -84,17 +84,14 @@ public class NPCMovement : MonoBehaviour
                 npcControl.animator.SetFloat("Forward", 0);
                 npcControl.navMeshAgent.speed = 0;
             }
-            //if (Vector3.Distance(transform.position, Player.ins.transform.position) >= NPCManager.ins.maxdistance)
-            //{
-
-            //    NPCManager.ins.npcPooling.ReturnPool(gameObject, 0.5f);
-            //    canmove = false;
-            //    yield break;
-            //}
-            npcControl.navMeshAgent.SetDestination(npcControl.pointtarget.position);
-            if (Vector3.Distance(transform.position, npcControl.pointtarget.position) < 5f)
+            if (npcControl.pointtarget != null)
             {
-                NextState(90);
+                npcControl.navMeshAgent.SetDestination(npcControl.pointtarget.position);
+            }
+          
+            if (Vector3.Distance(transform.position, npcControl.pointtarget.position) < 1f)
+            {
+                NextState(75);
             }
            
             yield return new WaitForSeconds(npcControl.timedelay);
@@ -107,9 +104,10 @@ public class NPCMovement : MonoBehaviour
 
     public void NextState(int rate)
     {
-        if (Vector3.Distance(transform.position, Player.ins.transform.position) >= 60)
+        if (Vector3.Distance(transform.position, Player.ins.transform.position) >= 150)
         {
-            NPCManager.ins.npcPooling.ReturnPool(gameObject, 0);
+            gameObject.SetActive(false);
+           
 
             return;
         }
@@ -117,9 +115,11 @@ public class NPCMovement : MonoBehaviour
         {
             int i = Random.Range(0, 101);
     
-            if (i >= 0 && i <= rate)
+            if ( i <= rate)
             {
-                npcControl.pointtarget = npcControl.pointtarget.gameObject.GetComponent<PointAIMove>().RandomNextPoint();
+                Transform currentpoint = npcControl.pointtarget;
+                npcControl.pointtarget = npcControl.pointtarget.gameObject.GetComponent<PointAIMove>().RandomNextPoint(npcControl.lastpoint);
+                npcControl.lastpoint = currentpoint;
                 npcControl.npcState.ChangeState(SelectState.Move);
             }
             else
@@ -127,6 +127,22 @@ public class NPCMovement : MonoBehaviour
                 npcControl.npcState.ChangeState(SelectState.Idle);
             }
         }
+    }
+    public bool CheckCollision()
+    {
+        if (npcControl.npcSensor.collisionwithplayer)
+        {
+          
+            return true;
+        }
+        if (npcControl.npcSensor.collisionwithtrafficlight)
+        {
+           
+            return true;
+        }
+        return false;
+
+        
     }
  
 }

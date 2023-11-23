@@ -10,6 +10,7 @@ public class NPCControl : MonoBehaviour
     public static NPCControl ins;
     public NavMeshAgent navMeshAgent;
     public NPCState npcState;
+    public NPCSensor npcSensor;
     public ChacractorData chacractorData;
     public LayerMask obstacleMask;
     public GameObject enemy;
@@ -21,37 +22,37 @@ public class NPCControl : MonoBehaviour
     public NPCDriver npcDriver;
     public float timedelay;
     public NPCHP npcHp;
-
+    public bool isPolice;
     private void Awake()
     {
         ins = this;
     }
-    private void Start()
-    {
-        DistancePlayer();
+    //private void Start()
+    //{
+    //    DistancePlayer();
         
-    }
+    //}
    
 
-    public void DistancePlayer()
-    {
-        float distance = Vector3.Distance(transform.position, Player.ins.transform.position);
+    //public void DistancePlayer()
+    //{
+    //    float distance = Vector3.Distance(transform.position, Player.ins.transform.position);
 
-        if(distance >= 100)
-        {
+    //    if(distance >= 100)
+    //    {
             
-            if(npcHp.isPolice == false)
-            {
-                NPCManager.ins.npcPooling.ReturnPool(gameObject, 0f);
-            }
-            else
-            {
-                //NPCManager.ins.npcPooling.ReturnStarNpc(gameObject);
-            }
+    //        if(npcHp.isPolice == false)
+    //        {
+    //            NPCManager.ins.npcPooling.ReturnPool(gameObject, 0f);
+    //        }
+    //        else
+    //        {
+    //            //NPCManager.ins.npcPooling.ReturnStarNpc(gameObject);
+    //        }
             
-        }
-        Invoke("DistancePlayer", 1f);
-    }
+    //    }
+    //    Invoke("DistancePlayer", 1f);
+    //}
     public void DoIdleAction()
     {
         npcMovement.canmove = false;

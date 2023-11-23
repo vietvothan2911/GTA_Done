@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9998ea8b599935459c3dac6ed3092b7, type: 3}
   m_Name: RedBike
   m_EditorClassIdentifier: 
-  motorType: 4
+  selectVehiclesDetroy: 10
+  HP: 150
+  wantedPoint: 8
   maxspeed: 20
   accelerationForce: 1000
   wheelsTorque: 20
   breakingForce: 500
   breakingForceMax: 1000
-  ForwardtiltFoce: 20
-  TurntiltFoce: 20
+  type: 4
+  motorType: 4

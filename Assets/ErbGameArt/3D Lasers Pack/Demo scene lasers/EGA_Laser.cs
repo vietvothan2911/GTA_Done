@@ -96,23 +96,26 @@ public class EGA_Laser : MonoBehaviour
         time += Time.deltaTime;
         if (time <= timeDelay) return;
         time = 0;
-    
-        if (other.gameObject.layer == 9)
+        if (other.gameObject.TryGetComponent(out IDameLaser _damelaser))
         {
-
-            //Player.ins.playerHP.OnHit(HitDameState.Weapon, true, dameExplosion,pos,powerRagDoll);
-
+            _damelaser.DameLaser(dame);
         }
-        if (other.gameObject.layer == 8)
-        {
-            other.gameObject.GetComponent<VehiclesHp>().DameVehicles(Mathf.Clamp(dame, 10, dame));
-        }
+        //if (other.gameObject.layer == 9)
+        //{
 
-        if (other.gameObject.layer == 10)
-        {
-            
-            other.gameObject.GetComponent<NPCHP>().HitDame(Mathf.Clamp(dame, 10, dame), Vector3.zero);
+        //    //Player.ins.playerHP.OnHit(HitDameState.Weapon, true, dameExplosion,pos,powerRagDoll);
 
-        }
+        //}
+        //if (other.gameObject.layer == 8)
+        //{
+        //    other.gameObject.GetComponent<VehiclesHp>().DameVehicles(Mathf.Clamp(dame, 10, dame));
+        //}
+
+        //if (other.gameObject.layer == 10)
+        //{
+
+        //    other.gameObject.GetComponent<NPCHP>().HitDame(Mathf.Clamp(dame, 10, dame), Vector3.zero);
+
+        //}
     }
 }

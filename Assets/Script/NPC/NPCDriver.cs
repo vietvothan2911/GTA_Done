@@ -16,52 +16,91 @@ public class NPCDriver : MonoBehaviour
     public bool candriver;
     float forward = 1;
     [Header("Vehicle")]
-    public GameObject Vehiclel;
+    public GameObject Vehicle;
     private IDriverVehicles driverVehicles;
     public float currentspeed;
     public float steeringAngle;
     public VehicleSensor sensor;
     private float timedelay;
     public bool isDriver;
-
+    public float font;
+    private Transform pointTarget;
     public void DriverVehicle()
     {
         GetInVehicles();
         Driver();
     }
-    public void GetInVehicles()
+    public void IsTakeDame()
     {
-
-        if (driverVehicles == null)
+        if (npcControl.isPolice)
         {
-            Vehiclel = Instantiate(npcControl.chacractorData.vehiclePrefab, transform.position, Quaternion.identity);
-            Vehiclel.transform.LookAt(npcControl.pointtarget);
-            driverVehicles = Vehiclel.GetComponent<IDriverVehicles>();
-            sensor = driverVehicles._sensor;
-            driverVehicles._driver = gameObject;
+            ChangeDriverState(DriverType.Pursue);
         }
         else
         {
-            driverVehicles._vehicles.transform.position = transform.position;
-            Vehiclel.transform.LookAt(npcControl.pointtarget);
-            driverVehicles._vehicles.SetActive(true);
+            ChangeDriverState(DriverType.Runaway);
+
         }
-        Debug.LogError("Check");
-        transform.parent = driverVehicles._driverSit;
-        driverVehicles._driver = gameObject;
+    }
+    public void ChangeDriverState(DriverType _driverType)
+    {
+        driverType = _driverType;
+        if (driverType == DriverType.Pursue)
+        {
+            StartCoroutine(CouroutineReturn());
+        }
+
+
+    }
+    IEnumerator CouroutineReturn()
+    {
+        yield return new WaitForSeconds(5f);
+        if (driverType != DriverType.Pursue)
+        {
+            yield break;
+        }
+        if (Vector3.Distance(transform.position, Player.ins.transform.position) > 100)
+        {
+            Return();
+            yield break;
+        }
+        else
+        {
+            StartCoroutine(CouroutineReturn());
+        }
+
+    }
+    public void GetInVehicles()
+    {
+
+       
         if (npcControl.chacractorData.vehicle == SelectVehicles.Car)
         {
-
+            if (npcControl.isPolice)
+            {
+                Vehicle = PoolingManager.ins.vehiclesPolicePooling.GetPoolCar(transform.position);
+            }
+            else
+            {
+                Vehicle = PoolingManager.ins.vehiclesPolling.GetPoolCar(transform.position);
+            }
             npcControl.animator.Play("SitInCar");
-            npcControl.animator.SetFloat("CarType", ((int)Vehiclel.GetComponent<Car>().carData.carType));
+            npcControl.animator.SetFloat("CarType", ((int)Vehicle.GetComponent<Car>().carData.type));
 
         }
         else if (npcControl.chacractorData.vehicle == SelectVehicles.Motor)
         {
+            Vehicle = PoolingManager.ins.vehiclesPolling.GetPoolMotor(transform.position);
             npcControl.animator.Play("SitInMotor");
-            npcControl.animator.SetFloat("MotorType", ((int)Vehiclel.GetComponent<Motor>().motorData.motorType));
+            npcControl.animator.SetFloat("MotorType", ((int)Vehicle.GetComponent<Motor>().motorData.type));
 
         }
+        Vehicle.transform.LookAt(npcControl.pointtarget);
+        driverVehicles = Vehicle.GetComponent<IDriverVehicles>();
+        sensor = driverVehicles._sensor;
+        driverVehicles._driver = gameObject;
+        transform.parent = driverVehicles._driverSit;
+        driverVehicles._driver = gameObject;
     }
     public void Driver()
     {
@@ -78,17 +117,13 @@ public class NPCDriver : MonoBehaviour
 
         while (candriver)
         {
-            if (Vehiclel == null)
+            if (Vehicle == null)
             {
                 yield break;
             }
             DriverManager();
             driverVehicles.DriverVehicles(forward, 0, steeringAngle * npcControl.chacractorData.speedRotate * forward, currentspeed);
-            if (Vector3.Distance(transform.position, npcControl.pointtarget.position) < 5f)
-            {
-                NextPoint();
-            }
-
+           
             yield return null;
 
 
@@ -117,115 +152,175 @@ public class NPCDriver : MonoBehaviour
     public void NormalDriver()
     {
 
-
         if (sensor.collisionwithhuman )
         {
-            driverVehicles._rb.isKinematic = true;
+            driverVehicles._rb.velocity = Vector3.zero;
             currentspeed = 0;
             forward = 0;
         }
-        else if ( sensor.collisionwithobject || sensor.collisionwithtrafficlight)
+        else if ( sensor.collisionwithobject || sensor.collisionwithtrafficlight|| sensor.collisionwithvehicles)
         {
-            float CosAngle = Vector3.Dot(sensor.objcollisionwithvehicles.transform.position - Vehiclel.transform.position, Vehiclel.transform.forward);
-            if (CosAngle < 0)
+            bool isFront = false;
+            if (sensor.collisionwithvehicles)
             {
-                //driverVehicles._rb.isKinematic = false;
+                float angle = Vector3.Angle(sensor.objcollisionwithvehicles.transform.position-Vehicle.transform.position, Vehicle.transform.forward);
+                isFront = angle >45;
+                font = angle;
+
+
+            }
+            else if (sensor.collisionwithobject)
+            {
+                float angle = Vector3.Angle(sensor.objcollisionwithobject.transform.position - Vehicle.transform.position, Vehicle.transform.forward);
+                isFront = angle > 45;
+                font = angle;
+            }
+           
+            if (isFront)
+            {
+
                 currentspeed = npcControl.chacractorData.speed;
-                forward = 0;
+                forward = 1;
                 return;
             }
-            //driverVehicles._rb.isKinematic = true;
             currentspeed = 0;
+            forward = 0;
+            driverVehicles.ApplyBreaks(1000);
         }
-
-
+        
         else
         {
             currentspeed = npcControl.chacractorData.speed;
             forward = 1;
             driverVehicles._rb.isKinematic = false;
         }
-
-        Vector3 relativeVector = Vehiclel.transform.InverseTransformPoint(npcControl.pointtarget.position);
-        steeringAngle = (relativeVector.x / relativeVector.magnitude);
-        currentspeed -= currentspeed * Mathf.Clamp(steeringAngle, 0, 0.5f);
-        //Vehiclel.transform.rotation = Quaternion.RotateTowards(Vehiclel.transform.rotation, Quaternion.LookRotation(npcControl.pointtarget.position - Vehiclel.transform.position), 50 * Time.deltaTime);
+        Vector3 relativeVector = Vehicle.transform.InverseTransformPoint(npcControl.pointtarget.position);
+        steeringAngle = (relativeVector.normalized.x / relativeVector.normalized.magnitude);
+        currentspeed -= currentspeed * Mathf.Clamp(Mathf.Abs(steeringAngle), 0, 0.5f);
+        forward -= forward * Mathf.Clamp(Mathf.Abs(steeringAngle), 0, 0.5f);
+        if (Vector3.Distance(transform.position, npcControl.pointtarget.position) < 5f)
+        {
+            NextPoint();
+        }
 
     }
     public void RunAwayDriver()
     {
-        findThePath.PathProgress(npcControl.pointtarget, Vehiclel.transform);
-        if (sensor.collisionwithhuman || sensor.collisionwithvehicles || sensor.collisionwithobject)
+        findThePath.PathProgress(npcControl.pointtarget, Vehicle.transform);
+        Vector3 relativeVector = Vehicle.transform.InverseTransformPoint(findThePath.PostionToFollow);
+        if (sensor.collisionwithhuman)
+        {
+            //    if (sensor.objcollisionwithhuman.CompareTag("Player"))
+            //    {
+            //        GetOutVehicle();
+            //    }
+        }
+        else if (sensor.collisionwithobject || sensor.collisionwithvehicles)
         {
 
-            if (sensor.collisionwithhuman)
+            timedelay += Time.deltaTime;
+            if (timedelay > 2 && !ischangedirection)
             {
-                currentspeed = 0;
-                driverVehicles._rb.isKinematic = true;
+                steeringAngle = (relativeVector.x > 1) ? 1 : -1;
+                currentspeed = npcControl.chacractorData.maxspeed;
+                timedelay = 0;
+                StartCoroutine(ChangeDirection());
             }
-            else
-            {
-                timedelay += Time.deltaTime;
-                if (timedelay > 2 && !ischangedirection)
-                {
 
-                    timedelay = 0;
-                    StartCoroutine(ChangeDirection());
-                }
-            }
         }
+
 
         else
         {
             currentspeed = npcControl.chacractorData.maxspeed;
             driverVehicles._rb.isKinematic = false;
+            forward = 1;
         }
+        if (!ischangedirection)
+        {
+            steeringAngle = (relativeVector.normalized.x / relativeVector.normalized.magnitude);
+            currentspeed -= currentspeed * Mathf.Clamp(Mathf.Abs(steeringAngle), 0, 0.5f);
+        }
+        //else
+        //{
+        //    steeringAngle = (relativeVector.x > 1) ? 1 : -1;
+        //    currentspeed = npcControl.chacractorData.maxspeed;
+        //}
 
-        Vector3 relativeVector = Vehiclel.transform.InverseTransformPoint(findThePath.PostionToFollow);
-        steeringAngle = (relativeVector.x / relativeVector.magnitude);
-        currentspeed -= currentspeed * Mathf.Clamp(steeringAngle, 0, 0.5f);
-        //Vehiclel.transform.rotation = Quaternion.RotateTowards(Vehiclel.transform.rotation, Quaternion.LookRotation(findThePath.PostionToFollow - Vehiclel.transform.position), 50 * Time.deltaTime);
-
+        if (Vector3.Distance(transform.position, npcControl.pointtarget.position) < 5f)
+        {
+            NextPoint();
+        }
     }
     public void PursueDriver()
     {
-        findThePath.PathProgress(Player.ins.transform, Vehiclel.transform);
-        if (sensor.collisionwithhuman || sensor.collisionwithvehicles || sensor.collisionwithobject)
+        findThePath.PathProgress(Player.ins.transform, Vehicle.transform);
+        Vector3 relativeVector = Vehicle.transform.InverseTransformPoint(findThePath.PostionToFollow);
+        if (sensor.collisionwithhuman)
         {
-
-            if (sensor.collisionwithhuman)
+            if (sensor.objcollisionwithhuman.CompareTag("Player"))
             {
-                currentspeed = 0;
-                driverVehicles._rb.isKinematic = true;
+                GetOutVehicle();
             }
-            else
-            {
-                timedelay += Time.deltaTime;
-                if (timedelay > 2 && !ischangedirection)
-                {
-
-                    timedelay = 0;
-                    StartCoroutine(ChangeDirection());
-                }
-            }
+            //driverVehicles._rb.velocity = Vector3.zero;
+            //currentspeed = 0;
+            //forward = 0;
         }
+        else if (sensor.collisionwithobject || sensor.collisionwithtrafficlight || sensor.collisionwithvehicles)
+        {
+            if (Vector3.Distance(transform.position, Player.ins.transform.position) < 10)
+            {
+                GetOutVehicle();
+            }
+            timedelay += Time.deltaTime;
+            if (timedelay > 2 && !ischangedirection)
+            {
+                steeringAngle = (relativeVector.x > 1) ? 1 : -1;
+                currentspeed = npcControl.chacractorData.maxspeed;
+                timedelay = 0;
+                StartCoroutine(ChangeDirection());
+            }
+
+        }
+       
 
         else
         {
             currentspeed = npcControl.chacractorData.maxspeed;
             driverVehicles._rb.isKinematic = false;
+            forward = 1;
         }
-
-        Vector3 relativeVector = Vehiclel.transform.InverseTransformPoint(findThePath.PostionToFollow);
-        steeringAngle = (relativeVector.x / relativeVector.magnitude);
-        currentspeed -= currentspeed * Mathf.Clamp(steeringAngle, 0, 0.5f);
+       
+        if (!ischangedirection)
+        {
+            steeringAngle = (relativeVector.normalized.x / relativeVector.normalized.magnitude);
+            currentspeed -= currentspeed * Mathf.Clamp(Mathf.Abs(steeringAngle), 0, 0.5f);
+        }
+        //else
+        //{
+        //    steeringAngle = (relativeVector.x > 1) ? 1 : -1;
+        //    currentspeed = npcControl.chacractorData.maxspeed;
+        //}
        
     }
-
+    public void Return()
+    {
+        
+        gameObject.transform.parent = null;
+        driverVehicles._driver = null;
+        Vehicle.SetActive(false);
+        gameObject.SetActive(false);
+    }
 
     public void NextPoint()
     {
-        if (driverType == DriverType.Pursue)
+        if (Vector3.Distance(transform.position, Player.ins.transform.position) >= 125)
+        {
+            Return();
+
+            return;
+        }
+        else if (driverType == DriverType.Pursue)
         {
             GetOutVehicle(false);
             return;
@@ -233,6 +328,10 @@ public class NPCDriver : MonoBehaviour
         else if (npcControl.pointtarget.gameObject.GetComponent<PointAIMove>() != null)
         {
             npcControl.pointtarget = npcControl.pointtarget.gameObject.GetComponent<PointAIMove>().RandomNextPoint();
+            if (driverType == DriverType.Runaway)
+            {
+                driverType = DriverType.Normal;
+            }
             return;
         }
     }
@@ -252,7 +351,9 @@ public class NPCDriver : MonoBehaviour
       
         candriver = false;
         transform.parent = null;
-        Vehiclel = null;
+        Vehicle = null;
+        driverVehicles._rb.velocity = Vector3.zero;
+        driverVehicles.Return();
         if (npcControl.chacractorData.vehicle == SelectVehicles.Car)
         {
 
@@ -265,7 +366,7 @@ public class NPCDriver : MonoBehaviour
 
         }
         npcControl.npcState.ChangeState(SelectState.Attack);
-
+     
     }
     public void GetOutCar(bool isEject, float side )
     {
@@ -295,36 +396,7 @@ public class NPCDriver : MonoBehaviour
         driverVehicles = null;
 
     }
-    //IEnumerator StopVehicles()
-    //{
-    //    //while (pursue)
-    //    //{
-    //    //    if (npcControl.chacractorData.vehicle == SelectVehicles.Car)
-    //    //    {
-    //    //        //car.MoveVehicle(forward, 0);
-    //    //        driverVehicles.DriverVehicles();
-    //    //        if (driverVehicles._rb.velocity.magnitude <= 0.1f)
-    //    //        {
-    //    //            pursue = false;
-    //    //        }
-    //    //    }
-    //    //    else if (npcControl.chacractorData.vehicle == SelectVehicles.Motor)
-    //    //    {
-    //    //        //motor.VerticalMove(forward, 0);
-    //    //        driverVehicles.DriverVehicles();
-    //    //        if (driverVehicles._rb.velocity.magnitude <= 0.1f)
-    //    //        {
-    //    //            pursue = false;
-    //    //        }
-    //    //    }
-    //    ////    yield return null;
-    //    //}
-    //    //transform.parent = null;
-    //    //npcControl.animator.SetTrigger("GetOutVehicle");
-
-    //    //Invoke("EndDeadVehicle", 2f);
-    //}
-
+ 
     public void EndDeadVehicle()
     {
         npcControl.DoFallAction();

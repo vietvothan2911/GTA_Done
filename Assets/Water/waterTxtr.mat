@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: waterTxtr
+  m_Shader: {fileID: 4800000, guid: bed57789d6ee402f818c903749874d07, type: 3}
+  m_ShaderKeywords: RIMLIGHT STATIC_REFLECTION _DISTORTIONQUALITY_HIGH _REFLECTIONTYPE_NONE
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: d9729e64081e9534f903a448cc843ec2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ColorControl:
+        m_Texture: {fileID: 2800000, guid: 4be503462fd34d14da7305f3d2bd3668, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Cube:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FoamTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ReflectionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - PixelSnap: 0
+    - _BumpScale: 1
+    - _BumpStrength: 1
+    - _CubeReflectionMin: 0.05
+    - _Cutoff: 0.5
+    - _Depth: 0.5
+    - _DetailNormalMapScale: 1
+    - _DinamicShadowMin: 0.4
+    - _Distortion: 50
+    - _DistortionQuality: 0
+    - _DstBlend: 0
+    - _EdgeFade: 1
+    - _EnableExternalAlpha: 0
+    - _EnableFog: 0
+    - _EnableLM: 0
+    - _FOAM: 0
+    - _FoamSize: 0.5
+    - _GlossMapScale: 1
+    - _Glossiness: 0.5
+    - _GlossyReflections: 1
+    - _Metallic: 0
+    - _Mode: 0
+    - _MulColorOn: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _ReflectIntensity: 1
+    - _Reflection: 1
+    - _ReflectionType: 0
+    - _RimPower: 5
+    - _Rimlightbias: 0
+    - _Rimlightscale: 1
+    - _Smoothness: 0.5
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _StaticReflectionIntensity: 1.04
+    - _UVOffsetX: 0
+    - _UVOffsetY: 0
+    - _UVSec: 0
+    - _WaveScale: 0.02
+    - _ZWrite: 1
+    m_Colors:
+    - WaveSpeed: {r: 1, g: 1, b: 31, a: 77}
+    - _AlphaIntensity: {r: 0.625, g: 0.625, b: 0.625, a: 1}
+    - _Ambient: {r: 0, g: 0, b: 0.1, a: 0}
+    - _Color: {r: 0.41960785, g: 0.654902, b: 0.83137256, a: 0.23137255}
+    - _ColorVar0: {r: 0, g: 0, b: 0, a: 1}
+    - _ColorVar1: {r: 0, g: 0, b: 0, a: 1}
+    - _CubeColor: {r: 0.10980392, g: 0.46666667, b: 0.7647059, a: 1}
+    - _DepthColor: {r: 0.4392157, g: 0.8117647, b: 0.7529412, a: 0}
+    - _DiffColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffColor1: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Rimlightcolor: {r: 0, g: 0.1981132, b: 0.0990806, a: 1}
+    - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Speeds: {r: 0, g: 0, b: 0, a: 0}
+    - _horizonColor: {r: 0.18378428, g: 0.4426743, b: 0.6603774, a: 1}
+  m_BuildTextureStacks: []

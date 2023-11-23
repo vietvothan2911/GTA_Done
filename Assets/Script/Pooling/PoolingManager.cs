@@ -8,8 +8,14 @@ public class PoolingManager : MonoBehaviour
     public FxPooling fxPooling;
     public BulletPooling bulletPooling;
     public FxShotPooling fxShotPooling;
-    public NPCPooling npcPooling;
+    public QuestPooling questPooling;
     public CivilianPooling civilianPooling;
+    public VehiclesPolling vehiclesPolling;
+    public VehiclesDetroyPooling vehiclesDetroyPooling;
+    public PolicePooling policePooling;
+    public VehiclesPolicePooling vehiclesPolicePooling;
+    public GameObjectPooling gameObjectPooling;
+    public PickUpPooling pickUpPooling;
     void Awake()
     {
         ins = this;

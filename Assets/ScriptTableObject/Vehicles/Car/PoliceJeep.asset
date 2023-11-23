@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f478972d9f457144d852f3ac6f140669, type: 3}
   m_Name: PoliceJeep
   m_EditorClassIdentifier: 
-  carType: 3
-  maxspeed: 15
-  accelerationForce: 1000
+  selectVehiclesDetroy: 5
+  HP: 550
+  wantedPoint: 20
+  maxspeed: 20
+  accelerationForce: 2000
   wheelsTorque: 20
-  breakingForce: 500
-  breakingForceMax: 5000
+  breakingForce: 0.1
+  breakingForceMax: 10000
+  type: 3
+  carType: 3

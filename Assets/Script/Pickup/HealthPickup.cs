@@ -13,4 +13,14 @@ public class HealthPickup : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+    private void OnEnable()
+    {
+        StartCoroutine(CouroutineReturn());
+    }
+    IEnumerator CouroutineReturn()
+    {
+        yield return new WaitForSeconds(30);
+        gameObject.SetActive(false);
+
+    }
 }

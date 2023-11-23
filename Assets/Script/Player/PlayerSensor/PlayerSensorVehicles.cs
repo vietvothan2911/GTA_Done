@@ -6,15 +6,14 @@ public class PlayerSensorVehicles : IHumanSensor
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (GameManager.ins.layerData.VehiclesLayer == (GameManager.ins.layerData.VehiclesLayer | (1 << other.gameObject.layer)))
+        if (other.CompareTag("SensorVehicles"))
         {
-            if (other.GetComponent<VehicleSensor>() != null)
-            {
+            
 
                 ControlsManager.ins.Control[0].GetComponent<CharacterControl>().getInVehicles.SetActive(true);
                 ObjectCollision = other.gameObject.transform.parent;
 
-            }
+            
 
 
         }

@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f478972d9f457144d852f3ac6f140669, type: 3}
   m_Name: Ambulance
   m_EditorClassIdentifier: 
-  carType: 3
+  selectVehiclesDetroy: 6
+  HP: 500
+  wantedPoint: 10
   maxspeed: 15
-  accelerationForce: 1000
+  accelerationForce: 1500
   wheelsTorque: 20
   breakingForce: 500
-  breakingForceMax: 5000
+  breakingForceMax: 10000
+  type: 3
+  carType: 3

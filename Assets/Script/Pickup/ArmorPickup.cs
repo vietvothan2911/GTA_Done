@@ -15,4 +15,14 @@ public class ArmorPickup : MonoBehaviour
             
         }
     }
+    private void OnEnable()
+    {
+        StartCoroutine(CouroutineReturn());
+    }
+    IEnumerator CouroutineReturn()
+    {
+        yield return new WaitForSeconds(30);
+        gameObject.SetActive(false);
+
+    }
 }

@@ -6,7 +6,9 @@ public class Motor : MonoBehaviour, IDriverVehicles
 {
     [Header("MotorInfo")]
     public PointVehicles pointVehicles;
-    public MotorData motorData;
+    public VehiclesData motorData;
+    public VehiclesData _vehiclesData { get; set; }
+    public Transform _damepoint { get; set; }
     public Rigidbody _rb { get; set; }
     public GameObject _vehicles { get; set; }
     public VehicleSensor _sensor { get; set; }
@@ -41,8 +43,10 @@ public class Motor : MonoBehaviour, IDriverVehicles
         _driverSit = pointVehicles.driverSit;
         _camtarget = pointVehicles.camtarget;
         _rb = GetComponent<Rigidbody>();
+        _damepoint = pointVehicles.damePoint;
         _sensor = sensor;
         _vehicles = gameObject;
+        _vehiclesData = motorData;
     }
     public void DriverVehicles(float acceleration, float vertical, float horizontal, float maxspeed)
     {
@@ -117,16 +121,14 @@ public class Motor : MonoBehaviour, IDriverVehicles
 
     public void ApplyBreaks(float breakingForce)
     {
-
-
         frontWheelCollider.brakeTorque = breakingForce;
         backWheelCollider.brakeTorque = breakingForce;
     }
     public void TiltingToMotorcycle(float Vertical, float Horizontal)
     {
         float v = _rb.velocity.magnitude / _maxspeed;
-        Tilting.y = Mathf.Lerp(Tilting.y, Vertical * motorData.ForwardtiltFoce * v, 5 * Time.deltaTime);
-        Tilting.x = Mathf.Lerp(Tilting.x, Horizontal * motorData.TurntiltFoce * v, 5 * Time.deltaTime);
+        Tilting.y = Mathf.Lerp(Tilting.y, Vertical * motorData.wheelsTorque * v, 5 * Time.deltaTime);
+        Tilting.x = Mathf.Lerp(Tilting.x, Horizontal * motorData.wheelsTorque * v, 5 * Time.deltaTime);
         transform.localRotation = Quaternion.Euler(Tilting.y, _rb.transform.localEulerAngles.y, -Tilting.x);
 
     }
@@ -140,6 +142,25 @@ public class Motor : MonoBehaviour, IDriverVehicles
     }
 
 
-
+    public void Return()
+    {
+        StartCoroutine(CouroutineReturn());
+    }
+    IEnumerator CouroutineReturn()
+    {
+        yield return new WaitForSeconds(5f);
+        if (_driver != null)
+        {
+            yield break;
+        }
+        if (Vector3.Distance(transform.position, Player.ins.transform.position) > 100)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            StartCoroutine(CouroutineReturn());
+        }
+    }
 
 }

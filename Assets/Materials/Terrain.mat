@@ -2,20 +2,18 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 8
+  serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Terrain
   m_Shader: {fileID: 4800000, guid: 23d709fbcc4d4056b8eee9f6314906bd, type: 3}
-  m_ValidKeywords: []
-  m_InvalidKeywords:
-  - ENABLE_LM
+  m_ShaderKeywords: ENABLE_LM
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2006
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -27,6 +25,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _Light:
         m_Texture: {fileID: 2800000, guid: e2d0436b35664b8d837ce2201ceb6160, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex0:
@@ -45,7 +47,6 @@ Material:
         m_Texture: {fileID: 2800000, guid: a84b34e2b84549799683eff32a0ae3cc, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Ints: []
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5

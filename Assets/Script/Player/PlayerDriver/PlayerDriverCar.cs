@@ -17,7 +17,7 @@ public class PlayerDriverCar : MonoBehaviour
         transform.parent.eulerAngles = car.transform.eulerAngles + new Vector3(0f, 90f, 0f);
         Player.ins.animator.SetTrigger("GetInVehicles");
         Player.ins.animator.SetInteger("VehiclesType", 1);
-        Player.ins.animator.SetFloat("CarType", ((int)car.carData.carType));
+        Player.ins.animator.SetFloat("CarType", ((int)car.carData.type));
         car.animOpenDoor.Play("Car_1_OpenLeft");
         CameraManager.ins.ChangeCam(1, car._camtarget);
         if (car._driver != null)
@@ -94,7 +94,7 @@ public class PlayerDriverCar : MonoBehaviour
         Player.ins.ChangeControl(0);
         Player.ins.characterController.enabled = true;
         car._rb.isKinematic = false;
-
+        
 
     }
 

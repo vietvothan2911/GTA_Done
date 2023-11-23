@@ -5,13 +5,10 @@ using UnityEngine;
 public class PointAIMove : MonoBehaviour
 {
 
-    public SelectPoint selectPoint;
     public SelectState currentState;
     public List<Transform> nextpoint;
-    public NPCPooling npcPooling;
     private float time;
     public Transform _nextpoint;
-    private GameObject newNpc;
     public bool canSpawn;
 
     private void OnEnable()
@@ -21,105 +18,79 @@ public class PointAIMove : MonoBehaviour
         Invoke("SpawnNpc", time);
       
     }
+   
     public void SpawnNpc()
     {
         if (!canSpawn) return;
         Transform nextpoint = RandomNextPoint();
+        if (gameObject.activeSelf)
+        {
+            StartCoroutine(ContinueSpawn(SpawnNpcManager.ins.timedelay));
+        }
+       
         float dis = Vector3.Distance(transform.position, Player.ins.transform.position);
         if (CheckObstruction()) return;
         if (dis < SpawnNpcManager.ins.mindistance || dis > SpawnNpcManager.ins.maxdistance) return;
-        //if (currentState == SelectState.Move)
-        //{
-        //    newNpc = PoolingManager.ins.civilianPooling.GetPoolMove(transform.position,nextpoint,transform);
-        //    if (newNpc == null) return;
-
-        //}
-       /* else*/ if (currentState == SelectState.Driver)
+        
+        if (currentState == SelectState.Move)
         {
-            newNpc = PoolingManager.ins.civilianPooling.GetPoolDriver(transform.position,nextpoint,transform);
-            if (newNpc == null) return;
+           
+            if(PoolingManager.ins.policePooling.GetPoolMove(transform.position, nextpoint, transform) == null)
+            {
+                PoolingManager.ins.civilianPooling.GetPoolMove(transform.position, nextpoint, transform);
+            }
+
+
+
+
+        }
+        else if (currentState == SelectState.Driver)
+        {
+            
+            if (PoolingManager.ins.policePooling.GetPoolDriver(transform.position, nextpoint, transform) == null)
+            {
+                PoolingManager.ins.civilianPooling.GetPoolDriver(transform.position, nextpoint, transform);
+            }
         }
     }
-    IEnumerator ContinueSpawn()
+    IEnumerator ContinueSpawn(float time )
     {
-        yield return new WaitForSeconds(SpawnNpcManager.ins.timedelay);
+        yield return new WaitForSeconds(time);
             SpawnNpc();
        
+    }
+    private void OnDisable()
+    {
+        StopAllCoroutines();
     }
     public bool CheckObstruction()
     {
         bool isObstruction = Physics.CheckSphere(transform.position, 3f, GameManager.ins.layerData.VehiclesLayer);
         return isObstruction;
     }
-    public void Init()
-    {
-        //_nextpoint = RandomNextPoint();
-        time = Random.Range(SpawnNpcManager.ins.mintime, SpawnNpcManager.ins.maxtime);
-        StartCoroutine(SpawnNPCCouroutine());
-    }
 
-    public Transform RandomNextPoint()
+    public Transform RandomNextPoint(Transform lastpoint=null)
     {
-        StartCoroutine(ContinueSpawn());
-        if (nextpoint.Count > 0)
+       
+        if (nextpoint.Count > 1)
         {
-
             int randomIndex = Random.Range(0, nextpoint.Count);
-
+            if (nextpoint[randomIndex] == lastpoint)
+            {
+                List<Transform> newnextpoint = nextpoint;
+                newnextpoint.RemoveAt(randomIndex);
+                return newnextpoint[0];
+            }
            
             return nextpoint[randomIndex];
         }
         else
         {
 
-            return null;
+            return nextpoint[0];
         }
     }
-    public IEnumerator SpawnNPCCouroutine()
-    {
-        if (selectPoint == SelectPoint.Drive)
-        {
-            yield break;
-        }
-        yield return new WaitForSeconds(time);
-
-            float dis = Vector3.Distance(transform.position, Player.ins.transform.position);
-        time = Random.Range(SpawnNpcManager.ins.mintime, SpawnNpcManager.ins.maxtime);
-        //Invoke("SpawnNPCCouroutine", time);
-
-        if (dis < SpawnNpcManager.ins.mindistance || dis > SpawnNpcManager.ins.maxdistance || !NPCManager.ins.CheckCanSpawn())
-        {
-            StartCoroutine(SpawnNPCCouroutine());
-            yield break;
-        }
-        GameObject newnpc = npcPooling.GetPool(transform.position);
-
-
-        if (newnpc == null)
-        {
-            StartCoroutine(SpawnNPCCouroutine());
-            yield break;
-            
-        }
-
-        NPCControl npcControl = newnpc.GetComponent<NPCControl>();
-
-        npcControl.pointtarget = RandomNextPoint();
-        newnpc.transform.LookAt(_nextpoint);
-        npcControl.lastpoint = transform;
-
-
-        if (selectPoint == SelectPoint.Walk)
-        {
-            npcControl.npcState.ChangeState(SelectState.Move);
-            
-
-        }
-        StartCoroutine(SpawnNPCCouroutine());
-        yield break;
-
-    }
-
+  
 }
 public enum SelectPoint
 {

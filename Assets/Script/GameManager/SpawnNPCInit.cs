@@ -44,16 +44,16 @@ public class SpawnNPCInit : MonoBehaviour
     {
         for (int i = 0; i < aIMoveCar.Count; i++)
         {
-            aIMoveCar[i].Init();
+            //aIMoveCar[i].Init();
         }
 
         for (int i = 0; i < aIMoveNPC.Count; i++)
         {
-            aIMoveNPC[i].Init();
+            //aIMoveNPC[i].Init();
         }
         for(int i = 0;i < aIPolice.Count; i++) 
         {
-            aIPolice[i].Init();
+            //aIPolice[i].Init();
         }
     }
 
