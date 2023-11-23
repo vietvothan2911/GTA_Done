@@ -1021,7 +1021,7 @@ GameObject:
   - component: {fileID: 5161803271145218122}
   - component: {fileID: 8372877426235550549}
   m_Layer: 10
-  m_Name: WaterSensor
+  m_Name: Sensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1069,8 +1069,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcControl: {fileID: 1715713701842772540}
-  dsdd: {fileID: 0}
-  NPC: {fileID: 0}
+  collisionwithplayer: 0
+  collisionwithobject: 0
+  collisionwithtrafficlight: 0
+  objcollisionwithhuman: {fileID: 0}
+  objcollisionwithobject: {fileID: 0}
+  objcollisionwithtrafficlight: {fileID: 0}
 --- !u!114 &5161803271145218122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1087,7 +1091,6 @@ MonoBehaviour:
   NPC: {fileID: 1714252807020601074}
   npcControl: {fileID: 1715713701842772540}
   hp: 100
-  isPolice: 0
   isNpcQuest: 0
   isdead: 0
   bonus: 10
@@ -1247,6 +1250,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshAgent: {fileID: 1715713701842772539}
   npcState: {fileID: 1715713701842772486}
+  npcSensor: {fileID: 1715713702726452834}
   chacractorData: {fileID: 11400000, guid: aba7d02fe4969174e9282c0f77284b4b, type: 2}
   obstacleMask:
     serializedVersion: 2
@@ -1260,6 +1264,7 @@ MonoBehaviour:
   npcDriver: {fileID: 5161803271222108598}
   timedelay: 0
   npcHp: {fileID: 5161803271145218122}
+  isPolice: 0
 --- !u!195 &1715713701842772539
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1378,11 +1383,12 @@ MonoBehaviour:
   findThePath: {fileID: 5161803271222108606}
   ischangedirection: 0
   candriver: 0
-  Vehiclel: {fileID: 0}
+  Vehicle: {fileID: 0}
   currentspeed: 0
   steeringAngle: 2
   sensor: {fileID: 0}
   isDriver: 0
+  font: 0
 --- !u!1 &1714267862338713464
 GameObject:
   m_ObjectHideFlags: 0

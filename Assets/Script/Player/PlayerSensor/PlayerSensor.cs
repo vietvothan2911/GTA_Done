@@ -9,19 +9,15 @@ public class PlayerSensor : MonoBehaviour
 
     public Transform ReturnHuman()
     {
-        if (human.ObjectCollision != null)
-        {
+       
             return human.ObjectCollision;
-        }
-        return null;
+       
     }
     public Transform ReturnVehicle()
     {
-        if (vehicle.ObjectCollision != null)
-        {
+        
             return vehicle.ObjectCollision;
-        }
-        return null;
+       
     }
 
 }

@@ -6,14 +6,12 @@ public  class CivilianPooling : MonoBehaviour
 {
     public List<GameObject> Npc = new List<GameObject>();
     [Header("Move")]
-    [SerializeField] List<GameObject> NPCPoolMove = new List<GameObject>();
+    public List<GameObject> NPCPoolMove = new List<GameObject>();
     public int maxNpcMove;
-    public int totalNpcMove;
     [Header("Driver")]
-    [SerializeField] List<GameObject> NPCPoolDriver = new List<GameObject>();
+    public List<GameObject> NPCPoolDriver = new List<GameObject>();
     public int maxNpcDriver;
-    public int totalNpcDriver;
-    private int index;
+    public int index;
 
 
     public void  RandomNPC()
@@ -21,7 +19,7 @@ public  class CivilianPooling : MonoBehaviour
         index = Random.Range(0, Npc.Count);
 
     }
-    public GameObject GetPoolMove(Vector3 pos,Transform nextpoint,Transform lastpoint)
+    public virtual GameObject GetPoolMove(Vector3 pos,Transform nextpoint,Transform lastpoint)
     {
         GameObject newNpc= GetPool(pos, NPCPoolMove, maxNpcMove);
           if (newNpc == null) return null;
@@ -33,7 +31,7 @@ public  class CivilianPooling : MonoBehaviour
         return newNpc;
     }
 
-    public GameObject GetPoolDriver(Vector3 pos, Transform nextpoint, Transform lastpoint)
+    public virtual GameObject GetPoolDriver(Vector3 pos, Transform nextpoint, Transform lastpoint)
     {
 
         GameObject newNpc = GetPool(pos, NPCPoolDriver, maxNpcDriver);
@@ -45,7 +43,7 @@ public  class CivilianPooling : MonoBehaviour
         npcControl.lastpoint = lastpoint;
         return newNpc;
     }
-    public  GameObject GetPool(Vector3 pos ,List<GameObject> NPCPool, float maxNpc)
+    public virtual GameObject GetPool(Vector3 pos ,List<GameObject> NPCPool, float maxNpc)
     {
         foreach (var npc in NPCPool)
         {
@@ -67,7 +65,7 @@ public  class CivilianPooling : MonoBehaviour
         }
 
         GameObject newnpc = Instantiate(Npc[index], pos, Quaternion.identity);
-        newnpc.GetComponent<NPCControl>().npcHp.isPolice = false;
+        newnpc.GetComponent<NPCControl>().isPolice = false;
         NPCPool.Add(newnpc);
         return newnpc;
     }

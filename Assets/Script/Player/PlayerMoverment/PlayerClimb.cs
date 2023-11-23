@@ -36,7 +36,7 @@ public class PlayerClimb : MonoBehaviour
             target = hit.point + hit.normal * rad + Vector3.down * Vector3.Distance(transform.position, wallCheck.position);
             transform.position = target;
             Quaternion newRotation = Quaternion.Euler(new Vector3(0, Quaternion.LookRotation(rot).eulerAngles.y, 0));
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, 300 * Time.deltaTime);
+            transform.rotation = newRotation;
             Player.ins.animator.SetBool("NearWall", true);
             return true;
         }

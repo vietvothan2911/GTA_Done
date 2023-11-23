@@ -27,22 +27,27 @@ public class DameExplosion : MonoBehaviour
     public void OnTriggerEnter(Collider other)
     {
         Vector3 direction = gameObject.transform.position - other.gameObject.transform.position;
-
-        if (other.gameObject.layer == 9)
+        if(other.gameObject.TryGetComponent(out IDameExplosion _dameExplosion))
         {
-
-            //Player.ins.playerHP.OnHit(HitDameState.Weapon, true, dameExplosion,pos,powerRagDoll);
-
-        }
-        if (other.gameObject.layer == 8)
-        {
-            other.gameObject.GetComponent<VehiclesHp>().DameVehicles(dameExplosion);
+            _dameExplosion.DameExplosion(dameExplosion, direction);
         }
 
-        if (other.gameObject.layer == 10)
-        {
-            other.gameObject.GetComponent<NPCHP>().HitDame(dameExplosion, direction, powerRagDoll, true);
+        //if (other.gameObject.layer == 9)
+        //{
 
-        }
+        //    //Player.ins.playerHP.OnHit(HitDameState.Weapon, true, dameExplosion,pos,powerRagDoll);
+
+        //}
+        //if (other.gameObject.layer == 8)
+        //{
+        //    if (other.gameObject.GetComponents<VehiclesHp>() == null) return;
+        //    other.gameObject.GetComponent<VehiclesHp>().DameVehicles(dameExplosion);
+        //}
+
+        //if (other.gameObject.layer == 10 && other.gameObject.GetComponent<NPCHP>()!=null)
+        //{
+        //    other.gameObject.GetComponent<NPCHP>().HitDame(dameExplosion, direction, powerRagDoll, true);
+
+        //}
     }
 }

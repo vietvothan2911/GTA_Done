@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f478972d9f457144d852f3ac6f140669, type: 3}
   m_Name: BMW
   m_EditorClassIdentifier: 
+  selectVehiclesDetroy: 1
+  HP: 300
+  wantedPoint: 10
   maxspeed: 15
   accelerationForce: 1000
   wheelsTorque: 20
-  breakingForce: 500
-  breakingForceMax: 5000
+  breakingForce: 0.1
+  breakingForceMax: 10000
+  type: 0
+  carType: 0

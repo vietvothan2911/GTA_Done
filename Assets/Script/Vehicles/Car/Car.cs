@@ -8,13 +8,15 @@ public class Car : MonoBehaviour, IDriverVehicles
 {
     [Header("CarInfo")]
     public PointVehicles pointVehicles;
-    public CarData carData;
+    public VehiclesData carData;
     public Animator animOpenDoor;
     public VehiclesHp vehiclesHp;
     public GameObject _vehicles { get; set; }
+    public Transform _damepoint { get; set; }
     public Rigidbody _rb { get; set; }
     public VehicleSensor sensor;
     public GameObject car;
+    public VehiclesData _vehiclesData{ get; set; }
     public VehicleSensor _sensor { get; set; }
     public List<Transform> _enterFormPos { get; set; }
     public GameObject _driver { get; set; }
@@ -33,46 +35,52 @@ public class Car : MonoBehaviour, IDriverVehicles
     public Transform frontLeftWheelTransform;
     public Transform backRightWheelTransform;
     public Transform backLeftWheelTransform;
-
     private float presentAcceleration = 0f;
-
     private float presentTurnAngle = 0f;
-
-    public NPCControl npcDrive;
-    public Transform transformNPC;
+    public int type;
     void Awake()
     {
         _enterFormPos = pointVehicles.enterFormPos;
         _driverSit = pointVehicles.driverSit;
-        _exitForce = pointVehicles.exitforce;
         _camtarget = pointVehicles.camtarget;
+        _damepoint = pointVehicles.damePoint;
         _rb = GetComponent<Rigidbody>();
         _maxspeed = carData.maxspeed;
         _sensor = sensor;
-        _vehicles = gameObject;
+        _vehiclesData = carData;
 
 
     }
     public void DriverVehicles(float acceleration, float vertical, float horizontal, float maxspeed)
     {
-        MoveVehicle(acceleration, maxspeed);
-        VehicleSteering(horizontal);
-        UpdateVehicleSteering();
-        _driver.transform.position = _driverSit.position;
-        _driver.transform.localRotation = Quaternion.identity;
-        if (Input.GetKey(KeyCode.A))
+      
+        if (_driver != null)
         {
-            VehicleSteering(-1);
+            _driver.transform.position = _driverSit.position;
+            _driver.transform.localRotation = Quaternion.identity;
+            MoveVehicle(acceleration, maxspeed);
+            VehicleSteering(horizontal);
+            UpdateVehicleSteering();
+          if (Input.GetKey(KeyCode.A))
+            {
+                VehicleSteering(-1);
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                VehicleSteering(1);
+            }
         }
-        else if (Input.GetKey(KeyCode.D))
+        else
         {
-            VehicleSteering(1);
+            _rb.velocity = Vector3.zero;
         }
+        
     }
 
     public void MoveVehicle(float Vertical, float speed)
     {
         _rb.centerOfMass = Vector3.zero;
+       
         float forwardSpeed = transform.InverseTransformDirection(_rb.velocity).z;
         if (Vertical != 0)
         {
@@ -93,7 +101,7 @@ public class Car : MonoBehaviour, IDriverVehicles
                 }
                 else
                 {
-                    //ApplyBreaks(carData.breakingForceMax);
+                    presentAcceleration = 0;
                     presentAcceleration = 0;
                 }
 
@@ -105,8 +113,8 @@ public class Car : MonoBehaviour, IDriverVehicles
             ApplyBreaks(carData.breakingForce);
             presentAcceleration = 0;
         }
-        backRightWheelCollider.motorTorque = presentAcceleration*Mathf.Clamp01(speed);
-        backLeftWheelCollider.motorTorque = presentAcceleration * Mathf.Clamp01(speed);
+        backRightWheelCollider.motorTorque = presentAcceleration;
+        backLeftWheelCollider.motorTorque = presentAcceleration ;
       
 
     }
@@ -121,7 +129,7 @@ public class Car : MonoBehaviour, IDriverVehicles
     public void VehicleSteering(float Horizontal)
     {
 
-        presentTurnAngle = Horizontal * carData.wheelsTorque;
+        presentTurnAngle =Mathf.Clamp( Horizontal * carData.wheelsTorque,-45,45);
         frontRightWheelCollider.steerAngle = presentTurnAngle;
         frontLeftWheelCollider.steerAngle = presentTurnAngle;
        
@@ -146,8 +154,26 @@ public class Car : MonoBehaviour, IDriverVehicles
         backRightWheelCollider.brakeTorque = breakingForce;
         backLeftWheelCollider.brakeTorque = breakingForce;
     }
-
-
+    public void Return()
+    {
+        StartCoroutine(CouroutineReturn());
+    }
+    IEnumerator CouroutineReturn()
+    {
+        yield return new WaitForSeconds(5f);
+        if (_driver != null)
+        {
+            yield break;
+        }
+        if (Vector3.Distance(transform.position, Player.ins.transform.position) > 100)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            StartCoroutine(CouroutineReturn());
+        }
+    }
 
 
 }

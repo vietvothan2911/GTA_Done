@@ -66,10 +66,10 @@ public class FindThePath : MonoBehaviour
                 PostionToFollow = waypoints[currentWayPoint];
                 if (Vector3.Distance(_transform.position, PostionToFollow) < 2)
                     currentWayPoint++;
-                if (Vector3.Distance(waypoints[waypoints.Count-1], pointtarget.position) > 10)
+                if (Vector3.Distance(waypoints[waypoints.Count-1], pointtarget.position) > 20)
                 {
-                    //currentWayPoint = 0;
-                    //waypoints.Clear();
+                    currentWayPoint = 0;
+                    waypoints.Clear();
                 }
 
                 

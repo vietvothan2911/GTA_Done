@@ -27,4 +27,5 @@ public class FixedJoystick : Joystick
         base.OnPointerUp(eventData);
        
     }
+   
 }

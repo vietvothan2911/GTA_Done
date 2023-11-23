@@ -36,6 +36,7 @@ public class ItemManager : MonoBehaviour
 
         SaveData();
 
+        AddMoney(999999);
     }
     private void Init()
     {

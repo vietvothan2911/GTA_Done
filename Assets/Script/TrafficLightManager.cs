@@ -10,7 +10,7 @@ public class TrafficLightManager : MonoBehaviour
     public float timeRed;
     public float timeGreen;
     public float timeYellow;
-    public float total;
+    private float total;
     private void Start()
     {
         total = direction.Count;
@@ -25,6 +25,7 @@ public class TrafficLightManager : MonoBehaviour
         foreach(var light in direction[0].trafficLight)
         {
             light.Red();
+            light.Carcollider();
             
         }
         if (total > 1)
@@ -32,6 +33,7 @@ public class TrafficLightManager : MonoBehaviour
             foreach (var light in direction[1].trafficLight)
             {
                 light.Green();
+                light.Pedestriancollider();
             }
         }
         yield return new WaitForSeconds(timeRed);
@@ -43,12 +45,14 @@ public class TrafficLightManager : MonoBehaviour
         foreach (var light in direction[0].trafficLight)
         {
             light.Green();
+            light.Pedestriancollider();
         }
         if (total > 1)
         {
             foreach (var light in direction[1].trafficLight)
             {
                 light.Red();
+                light.Carcollider();
             }
         }
         yield return new WaitForSeconds(timeGreen);

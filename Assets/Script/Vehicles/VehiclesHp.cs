@@ -3,116 +3,96 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class VehiclesHp : MonoBehaviour
+public class VehiclesHp : MonoBehaviour, IDameExplosion,IDameLaser
 {
+    public IDriverVehicles driverVehicles;
     [SerializeField]
     private float hp;
-    private float fisrtHp;
+    private float maxHP;
+    public int index;
+    private Transform damePoint;
+    private ParticleSystem smokeFx;
+    private ParticleSystem fireFx;
 
-    [SerializeField]
-    private Car car;
-
-    [SerializeField]
-    private GameObject vehiclesExplosion;
-
-    [SerializeField]
-    private GameObject vehiclesNomal;
-
-    [SerializeField]
-    private bool isExplosion;
 
     public void Start()
     {
+        driverVehicles = gameObject.transform.parent.GetComponent<IDriverVehicles>();
+        SelectVehiclesDetroy _selectVehiclesDetroy = driverVehicles._vehiclesData.selectVehiclesDetroy;
+        index = (int)_selectVehiclesDetroy;
+        maxHP= driverVehicles._vehiclesData.HP;
+        damePoint = driverVehicles._damepoint;
         Init();
-        fisrtHp = hp;
     }
-
+   
     public void Init()
     {
-
-        vehiclesExplosion.SetActive(false);
-
-        vehiclesNomal.SetActive(true);
-
-        if(car != null) { car.enabled = true; }
-
-        DistancePlayer();
-
-        hp = fisrtHp;
-
-        isExplosion = true;
+        hp = driverVehicles._vehiclesData.HP;
     }
-
-    public void DistancePlayer()
+    public void DameLaser(float dame)
     {
-        float distance = Vector3.Distance(transform.position, Player.ins.transform.position);
-
-        if (distance >= 50 && car._driver == null)
+        if (DameVehicles(dame))
         {
-            //NPCManager.ins.npcPooling.ReturnPool(gameObject, 0.1f);
-        }
-        else
-        {
-            Invoke("DistancePlayer", 1f);
-        }
-
-        if (!car.gameObject.activeSelf && car._driver != null)
-        {
-            NPCPooling.ins.ReturnPool(car._driver, 0f);
-            car._driver.transform.parent = null;
-            car._driver = null;
-            
+            ReturnDriver();
         }
     }
-
-    public void DameVehicles(float _hp)
+    public void DameExplosion(float dame,Vector3 direction)
     {
-        hp -= _hp;
-        if (car._driver != null)
+        if (DameVehicles(dame))
         {
-            car._driver.GetComponent<NPCDriver>().driverType = DriverType.Runaway;
+            ReturnDriver();
         }
-        
-
-        if (hp <= 0)
+    }
+    public bool DameVehicles(float dame)
+    {
+        hp -= dame;
+        if (hp <= maxHP * VehiclesHPData.ins.rateSmoke)
         {
-            vehiclesExplosion.SetActive(true);
-
-            vehiclesNomal.SetActive(false);
-
-            car.enabled = false;
-
-            car.npcDrive.npcHp.HitDame(200, Vector3.zero);
-
-            if (isExplosion)
+           
+            if (hp <= maxHP * VehiclesHPData.ins.rateFire)
             {
-                ParticleSystem hit = FxPooling.ins.GetrocketHitPool(transform.position);
-
-                isExplosion = false;
+                if (hp <= 0)
+                {
+                    PoolingManager.ins.vehiclesDetroyPooling.GetVehiclesDetroyedPool(transform.parent.position, transform.forward, index);
+                    FxPooling.ins.GetrocketHitPool(transform.position);
+                    PoliceStarManager.ins.ChangeWanterPoint(driverVehicles._vehiclesData.wantedPoint);
+                    transform.parent.gameObject.SetActive(false);
+                    return true;
+                }
+                if (fireFx != null) return false;
+                fireFx = PoolingManager.ins.fxPooling.GetFirePool(damePoint.position);
+                fireFx.gameObject.transform.parent = damePoint;
+                return false;
             }
-            
+            if (smokeFx != null) return false;
+            smokeFx=PoolingManager.ins.fxPooling.GetSmokePool(damePoint.position);
+            smokeFx.gameObject.transform.parent = damePoint;
 
-            Invoke("ReturnVehicles", 3f);
         }
+        if (driverVehicles._driver != null)
+        {
+            if (driverVehicles._driver.CompareTag("Player")) return false;
+            driverVehicles._driver.GetComponent<NPCDriver>().IsTakeDame();
+        }
+        return false;
+
+
 
     }
+    public void ReturnDriver()
+    {
+        if (driverVehicles._driver != null)
+        {
+            if (driverVehicles._driver.CompareTag("Player")) return;
+            PoolingManager.ins.pickUpPooling.GetPickUp(transform.position);
+            PoolingManager.ins.gameObjectPooling.GetSkeletonPool(transform.position);
+            driverVehicles._driver.GetComponent<NPCDriver>().Return();
+        }
+    }
+    public void OnDisable()
+    {
+        Init();
+    }
 
-    //public void ReturnVehicles()
-    //{
-    //    if (Vector3.Distance(transform.position, Player.ins.transform.position) > 100)
-    //    {
-    //        NPCPooling.ins.ReturnCar(transform.parent.gameObject);
-
-    //        //SpawnNPCInit.ins.Vehicles(-1);
-
-    //        Init();
-
-    //    }
-    //    else
-    //    {
-    //        Invoke("ReturnVehicles", 1f);
-    //    }
-       
-    //}
 
 }

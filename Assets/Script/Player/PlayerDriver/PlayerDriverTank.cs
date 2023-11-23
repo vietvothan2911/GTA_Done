@@ -40,5 +40,6 @@ public class PlayerDriverTank : MonoBehaviour
         Player.ins.ChangeControl(0);
         CameraManager.ins.ChangeCam(0);
         Player.ins.characterController.enabled = true;
+
     }
 }

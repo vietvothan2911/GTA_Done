@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAttack : MonoBehaviour
+public class PlayerAttack : MonoBehaviour,IUnarmed
 {
     public SelectWeapon selectWeapon;
     public GameObject _weapon;

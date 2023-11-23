@@ -1177,6 +1177,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshAgent: {fileID: 3652923773567881222}
   npcState: {fileID: 3652923773567881275}
+  npcSensor: {fileID: 3652923773227365471}
   chacractorData: {fileID: 11400000, guid: 4d8e271b6637c274297f69d5266d4165, type: 2}
   obstacleMask:
     serializedVersion: 2
@@ -1303,17 +1304,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52a09cf22cd86624c93f25f478d90e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  driverType: 0
   npcControl: {fileID: 3652923773567881217}
   findThePath: {fileID: 7123800633998087043}
   ischangedirection: 0
   candriver: 0
-  runaway: 0
-  pursue: 0
-  Vehiclel: {fileID: 0}
+  Vehicle: {fileID: 0}
   currentspeed: 0
   steeringAngle: 2
   sensor: {fileID: 0}
   isDriver: 0
+  font: 0
 --- !u!114 &488649813232716149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1389,8 +1390,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcControl: {fileID: 3652923773567881217}
-  dsdd: {fileID: 0}
-  NPC: {fileID: 0}
+  collisionwithplayer: 0
+  collisionwithobject: 0
+  collisionwithtrafficlight: 0
+  objcollisionwithhuman: {fileID: 0}
+  objcollisionwithobject: {fileID: 0}
+  objcollisionwithtrafficlight: {fileID: 0}
 --- !u!114 &7123800634071143031
 MonoBehaviour:
   m_ObjectHideFlags: 0

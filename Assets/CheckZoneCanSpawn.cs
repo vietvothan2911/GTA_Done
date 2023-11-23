@@ -4,16 +4,23 @@ using UnityEngine;
 
 public class CheckZoneCanSpawn : MonoBehaviour
 {
-    public GameObject pointsSpawn;
+    public List<GameObject> Zones= new List<GameObject>();
     void OnBecameVisible()
     {
-        pointsSpawn.SetActive(true);
-        Debug.Log("on");
+       foreach(var zone in Zones)
+        {
+            zone.SetActive(true);
+        }
+       
     }
 
     void OnBecameInvisible()
     {
-        pointsSpawn.SetActive(false);
-        Debug.Log("off");
+
+        foreach (var zone in Zones)
+        {
+            zone.SetActive(false);
+        }
+    
     }
 }

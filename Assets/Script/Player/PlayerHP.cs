@@ -159,7 +159,7 @@ public class PlayerHP : MonoBehaviour
         player.SetActive(true);
         transform.position = firstPosition;
         gameObject.GetComponent<CharacterController>().enabled = true;
-        NPCPooling.ins.CheckPlayerDead();
+        //NPCPooling.ins.CheckPlayerDead();
         Destroy(ragdollNow);
 
     }
